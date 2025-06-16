@@ -25,22 +25,18 @@ type Insights = {
 
 export default function Insights() {
     const { session } = useAuth();
-    const dateIn = moment().startOf('month').format('YYYY-MM-DD');
-    const dateOut = moment().format('YYYY-MM-DD');
+    const userId = session?.id;
 
-    const { data, isFetching } = useQuery({
+    const { data, isPending } = useQuery({
         queryFn: async () => {
-            const response = await api.get(
-                `insights?userId=${session?.id}&dateIn=${dateIn}&dateOut=${dateOut}`
-            );
-
-            const data: Insights = response.data;
-            return data;
+          const data = await getInsights(userId);
+          return data;
         },
         queryKey: ['insights'],
+        enabled: !!userId,
     });
 
-    if (isFetching) {
+    if (isPending) {
         return <p>Loading...</p>;
     }
 
