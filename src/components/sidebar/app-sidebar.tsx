@@ -16,6 +16,7 @@ import { NavMenu } from "./nav-menu"
 import Image from "next/image"
 import { Separator } from "../ui/separator"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { useAuth } from "@/context/auth-context"
 
 const items = [
   {
@@ -36,6 +37,8 @@ const items = [
 ]
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { session } = useAuth();
+
   return (
     <Sidebar {...props} className="border-r">
       <SidebarHeader className="py-6">
@@ -69,8 +72,8 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                     <User className="size-4" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">João Silva</span>
-                    <span className="truncate text-xs text-muted-foreground">joao@empresa.com</span>
+                    <span className="truncate font-semibold">{session?.firstName} {session?.lastName}</span>
+                    <span className="truncate text-xs text-muted-foreground">@{session?.username}</span>
                   </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

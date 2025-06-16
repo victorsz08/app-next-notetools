@@ -8,10 +8,9 @@ import {
 } from '@/components/ui/card';
 import { useAuth } from '@/context/auth-context';
 import { getInsights } from '@/data/get-insights';
-import { api } from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 import { DollarSign, ShoppingCart, TrendingUp } from 'lucide-react';
-import moment from 'moment';
+import { Skeleton } from '../ui/skeleton';
 
 type Insights = {
     revenue: number;
@@ -37,7 +36,13 @@ export default function Insights() {
     });
 
     if (isPending) {
-        return <p>Loading...</p>;
+        return (
+          <div className='flex gap-2'>
+            <Skeleton className='w-full h-40 bg-muted-foreground/40 rounded-lg'/>
+            <Skeleton className='w-full h-40 bg-muted-foreground/40 rounded-lg'/>
+            <Skeleton className='w-full h-40 bg-muted-foreground/40 rounded-lg'/>
+          </div>
+        );
     }
 
     return (
@@ -45,7 +50,9 @@ export default function Insights() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardDescription>Faturamento</CardDescription>
-                    <DollarSign className="h-4 w-4 text-muted-foreground" />
+                    <span className='bg-orange-500/20 text-orange-500 p-2 rounded-sm'>
+                      <DollarSign className="h-4 w-4" />
+                    </span>
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
@@ -66,7 +73,9 @@ export default function Insights() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardDescription>Vendas</CardDescription>
-                    <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+                    <span className='bg-green-500/20 text-green-600 p-2 rounded-sm'>
+                    <ShoppingCart className="h-4 w-4" />
+                    </span>
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">{
@@ -81,7 +90,9 @@ export default function Insights() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardDescription>Percentual de Instalação</CardDescription>
-                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <span className='bg-blue-500/20 text-blue-600 p-2 rounded-sm'>
+                      <TrendingUp className="h-4 w-4" />
+                    </span>
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
