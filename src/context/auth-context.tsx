@@ -66,9 +66,9 @@ export function AuthContextProvider({
     }
 
     // Se ocorrer um erro que não seja de autenticação, mostramos uma tela de erro.
-    if (error) {
-        return <p>Ocorreu um erro ao carregar a aplicação.</p>;
-    }
+    // if (error) {
+    //     return <p>Ocorreu um erro ao carregar a aplicação.</p>;
+    // }
 
     // Apenas renderiza os filhos se não estiver carregando e não houver erro.
     // O redirecionamento do 401 já terá sido disparado.

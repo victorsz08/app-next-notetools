@@ -2,12 +2,9 @@
 
 import AppSidebar from "@/components/sidebar/app-sidebar";
 import {
-  SidebarHeader,
-  SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/context/auth-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 
@@ -20,9 +17,6 @@ const queryClient = new QueryClient({
 })
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { session } = useAuth();
-
-  
 
   return (
     <QueryClientProvider client={queryClient}>

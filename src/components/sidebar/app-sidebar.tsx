@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { Clipboard, Home, Notebook, User, LogOut } from "lucide-react"
+import { Clipboard, Home, Notebook, User, LogOut, UserCheck, CheckCircle, Wallet } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +17,7 @@ import Image from "next/image"
 import { Separator } from "../ui/separator"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { useAuth } from "@/context/auth-context"
+import { NavLink } from "./nav-link"
 
 const items = [
   {
@@ -35,6 +36,24 @@ const items = [
     icon: Notebook,
   },
 ]
+const links = [
+  {
+    title: "Situação cadastral CPF",
+    href: "https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp",
+    icon: UserCheck
+  },
+  {
+    title: "Situação Cadastral CNPJ",
+    href: "https://solucoes.receita.fazenda.gov.br/Servicos/cnpjreva/cnpjreva_Solicitacao.asp",
+    icon: CheckCircle
+  },
+  {
+    title: "Negocia Fácil Claro",
+    href: "https://claro.negociafacil.com.br/",
+    icon: Wallet
+  }
+]
+
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { session } = useAuth();
@@ -57,6 +76,9 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
 
       <SidebarContent className="py-4">
         <NavMenu items={items} />
+        <Separator/>
+        <NavLink items={links}/> 
+        <Separator/>
       </SidebarContent>
 
       <SidebarFooter className="p-2">

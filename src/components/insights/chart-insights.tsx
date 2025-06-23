@@ -39,9 +39,16 @@ export function ChartInsights() {
 
     if (isPending) {
         return (
-            <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
+            <div className='flex gap-4 w-full'>
+                <Skeleton className="w-[360px] h-[320px] bg-muted-foreground/40 rounded-lg" />
+                <Skeleton className="w-full h-[320px] bg-muted-foreground/40 rounded-lg" />
+            </div>
         );
     }
 
-    return <DonutChart chartData={chartData} />;
+    return (
+        <div className='flex gap-4 w-full'>
+            <DonutChart chartData={chartData} />
+        </div>
+    );
 }
