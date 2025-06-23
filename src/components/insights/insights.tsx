@@ -16,10 +16,6 @@ type Insights = {
     revenue: number;
     sales: number;
     completionRate: number;
-    cancelledRate: number;
-    connected: number;
-    pending: number;
-    cancelled: number;
 };
 
 export default function Insights() {
@@ -28,8 +24,8 @@ export default function Insights() {
 
     const { data, isPending } = useQuery({
         queryFn: async () => {
-          const data = await getInsights(userId);
-          return data;
+            const data = await getInsights(userId);
+            return data;
         },
         queryKey: ['insights'],
         enabled: !!userId,
@@ -37,11 +33,11 @@ export default function Insights() {
 
     if (isPending) {
         return (
-          <div className='flex gap-2'>
-            <Skeleton className='w-full h-40 bg-muted-foreground/40 rounded-lg'/>
-            <Skeleton className='w-full h-40 bg-muted-foreground/40 rounded-lg'/>
-            <Skeleton className='w-full h-40 bg-muted-foreground/40 rounded-lg'/>
-          </div>
+            <div className="flex gap-2">
+                <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
+                <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
+                <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
+            </div>
         );
     }
 
@@ -50,8 +46,8 @@ export default function Insights() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardDescription>Faturamento</CardDescription>
-                    <span className='bg-orange-500/20 text-orange-500 p-2 rounded-sm'>
-                      <DollarSign className="h-4 w-4" />
+                    <span className="bg-orange-500/20 text-orange-500 p-2 rounded-sm">
+                        <DollarSign className="h-4 w-4" />
                     </span>
                 </CardHeader>
                 <CardContent>
@@ -73,14 +69,14 @@ export default function Insights() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardDescription>Vendas</CardDescription>
-                    <span className='bg-green-500/20 text-green-600 p-2 rounded-sm'>
-                    <ShoppingCart className="h-4 w-4" />
+                    <span className="bg-green-500/20 text-green-600 p-2 rounded-sm">
+                        <ShoppingCart className="h-4 w-4" />
                     </span>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{
-                        data && data.sales
-                      }</div>
+                    <div className="text-2xl font-bold">
+                        {data && data.sales}
+                    </div>
                     <p className="text-xs text-muted-foreground">
                         +180.1% em relação ao mês passado
                     </p>
@@ -90,13 +86,13 @@ export default function Insights() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardDescription>Percentual de Instalação</CardDescription>
-                    <span className='bg-blue-500/20 text-blue-600 p-2 rounded-sm'>
-                      <TrendingUp className="h-4 w-4" />
+                    <span className="bg-blue-500/20 text-blue-600 p-2 rounded-sm">
+                        <TrendingUp className="h-4 w-4" />
                     </span>
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">
-                      {data &&
+                        {data &&
                             new Intl.NumberFormat('pt-BR', {
                                 style: 'percent',
                             }).format(data.completionRate)}

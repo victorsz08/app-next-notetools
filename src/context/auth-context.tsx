@@ -5,23 +5,27 @@ import { useRouter } from 'next/navigation';
 import { createContext, use, useContext, useEffect, useState } from 'react';
 
 type Session = {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  role: string
-  iat: number
-  exp: number
-}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+};
 
 type AuthContextType = {
     session?: Session;
 };
 
-export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+export const AuthContext = createContext<AuthContextType>(
+    {} as AuthContextType
+);
 
-export function AuthContextProvider({ children }: { children: React.ReactNode }) {
-const router = useRouter();
+export function AuthContextProvider({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const router = useRouter();
     const [session, setSession] = useState<Session>();
     const [isLoading, setIsLoading] = useState(true); // Começa como true por padrão
     const [error, setError] = useState(false); // Estado para erros não esperados
@@ -30,28 +34,24 @@ const router = useRouter();
         const getSession = async () => {
             try {
                 const response = await api.get('/auth/session');
-
-                // Sucesso: Geralmente a API retorna 200 OK com dados.
-                // Status 204 (No Content) significa que não há corpo na resposta.
-                // Se a sua API retorna dados, o status deve ser 200.
                 if (response.status === 200) {
-                    setSession(response.data);
+                    await api.get(`/users/${response.data.id}`).then((res) => {
+                        setSession({
+                            id: res.data.id,
+                            username: res.data.username,
+                            firstName: res.data.firstName,
+                            lastName: res.data.lastName,
+                            role: res.data.role,
+                        });
+                    });
                 }
-
             } catch (err: any) {
-                // O erro é tratado aqui no catch.
-                // Verificamos se o erro tem uma resposta e se o status é 401.
                 if (err?.response?.status === 401) {
-                    // Se for 401, o usuário não está logado. Redirecionamos.
                     router.push('/auth/login');
                 } else {
-                    // Para qualquer outro erro (ex: falha de rede, erro 500),
-                    // ativamos o estado de erro para mostrar uma mensagem.
                     setError(true);
                 }
             } finally {
-                // O finally sempre será executado, seja no sucesso ou no erro.
-                // É o lugar perfeito para garantir que o loading termine.
                 setIsLoading(false);
             }
         };
