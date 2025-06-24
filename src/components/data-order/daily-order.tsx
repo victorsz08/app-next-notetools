@@ -37,7 +37,32 @@ export function DailyOrder() {
         queryFn: getDailyOrders,
         queryKey: ["orders"],
         enabled: !!userId,
-        initialData: [],
+        initialData: [
+            {
+                id: "124",
+                number: 12345,
+                local: "São Paulo/SP",
+                schedulingDate: "2025-06-01",
+                schedulingTime: "12:00 as 15:00",
+                status: "PENDENTE",
+                contact: "88 88888-8888",
+                price: 119.9,
+                createdAt: "2025-06-01",
+                updatedAt: "2025-06-01",
+            },
+            {
+                id: "123",
+                number: 12345,
+                local: "São Paulo/SP",
+                schedulingDate: "2025-06-01",
+                schedulingTime: "12:00 as 15:00",
+                status: "PENDENTE",
+                contact: "88 88888-8888",
+                price: 119.9,
+                createdAt: "2025-06-01",
+                updatedAt: "2025-06-01",
+            },
+        ],
     });
 
     if (isFetching) {

@@ -12,7 +12,7 @@ export function NotFoundOrder() {
                     <h3 className="text-lg font-semibold text-muted-foreground/70 tracking-tight">
                         Nenhum pedido para hoje
                     </h3>
-                    <p className="text-xs font-light tracking-tight text-muted-foreground/60">
+                    <p className="text-xs font-light tracking-tight text-muted-foreground/80">
                         Crie um novo pedido para começar.
                     </p>
                 </div>

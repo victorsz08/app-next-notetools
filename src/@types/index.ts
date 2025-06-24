@@ -11,7 +11,7 @@ export type DataOrder = {
     number: number;
     local: string;
     schedulingDate: string;
-    schudulingTime: string;
+    schedulingTime: string;
     price: number;
     contact: string;
     status: StatusType;
