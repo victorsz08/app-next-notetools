@@ -1,5 +1,6 @@
 'use client';
 
+import Loading from '@/app/loading';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { createContext, use, useContext, useEffect, useState } from 'react';
@@ -59,19 +60,10 @@ export function AuthContextProvider({
         getSession();
     }, [router]); // Adicionado router como dependência, pois é usado no efeito.
 
-    // Enquanto carrega, mostramos uma tela de loading.
-    // Isso impede que os componentes filhos renderizem sem uma sessão.
     if (isLoading) {
-        return <p>Carregando...</p>;
+        return <Loading />;
     }
 
-    // Se ocorrer um erro que não seja de autenticação, mostramos uma tela de erro.
-    // if (error) {
-    //     return <p>Ocorreu um erro ao carregar a aplicação.</p>;
-    // }
-
-    // Apenas renderiza os filhos se não estiver carregando e não houver erro.
-    // O redirecionamento do 401 já terá sido disparado.
     return (
         <AuthContext.Provider value={{ session }}>
             {children}

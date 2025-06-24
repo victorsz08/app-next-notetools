@@ -1,107 +1,105 @@
 'use client';
 
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-} from '@/components/ui/card';
 import { useAuth } from '@/context/auth-context';
-import { getInsights } from '@/data/get-insights';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { useQuery } from '@tanstack/react-query';
-import { DollarSign, ShoppingCart, TrendingUp } from 'lucide-react';
+import moment from 'moment';
+import { api } from '@/lib/axios';
+import { DataInsights } from '@/@types';
 import { Skeleton } from '../ui/skeleton';
+import { HandCoins, Handshake, Percent } from 'lucide-react';
+import { formatCurrency, formatPercentage } from '@/lib/utils';
 
-type Insights = {
-    revenue: number;
-    sales: number;
-    completionRate: number;
+type CardInsightProps = {
+    title: string;
+    children?: React.ReactNode;
+    icon?: React.ReactNode;
 };
 
-export default function Insights() {
+export function CardInsight({ title, children, icon }: CardInsightProps) {
+    return (
+        <Card className="w-full shadow-none">
+            <CardHeader className="flex items-center justify-between">
+                <CardTitle className="text-xs font-light tracking-tight text-muted-foreground/60">
+                    {title}
+                </CardTitle>
+                {icon}
+            </CardHeader>
+            <CardContent>
+                <span className="text-2xl tracking-tighter font-bold text-muted-foreground">
+                    {children}
+                </span>
+            </CardContent>
+        </Card>
+    );
+}
+
+const dateIn = moment().startOf('month').format('YYYY-MM-DD');
+const dateOut = moment().endOf('month').format('YYYY-MM-DD');
+
+const initialData: DataInsights = {} as DataInsights;
+
+export function Insights() {
     const { session } = useAuth();
     const userId = session?.id;
 
-    const { data, isPending } = useQuery({
-        queryFn: async () => {
-            const data = await getInsights(userId);
-            return data;
-        },
+    const getInsights = async () => {
+        const response = await api.get(
+            `insights/${userId}?dateIn=${dateIn}&dateOut=${dateOut}`
+        );
+
+        return response.data;
+    };
+
+    const { data, isFetching } = useQuery<DataInsights>({
+        queryFn: getInsights,
         queryKey: ['insights'],
         enabled: !!userId,
+        initialData,
     });
 
-    if (isPending) {
+    if (isFetching) {
         return (
-            <div className="flex gap-2">
-                <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
-                <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
-                <Skeleton className="w-full h-40 bg-muted-foreground/40 rounded-lg" />
+            <div className="flex gap-4 w-full">
+                <Skeleton className="w-full h-32 bg-muted-foreground/40 rounded-lg" />
+                <Skeleton className="w-full h-32 bg-muted-foreground/40 rounded-lg" />
+                <Skeleton className="w-full h-32 bg-muted-foreground/40 rounded-lg" />
             </div>
         );
     }
 
     return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardDescription>Faturamento</CardDescription>
-                    <span className="bg-orange-500/20 text-orange-500 p-2 rounded-sm">
-                        <DollarSign className="h-4 w-4" />
+        <section className="flex gap-4">
+            <CardInsight
+                title="Faturamento"
+                icon={
+                    <span className="p-2 w-fit rounded-sm bg-blue-200 text-blue-700">
+                        <HandCoins className="w-5 h-5" />
                     </span>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        {data &&
-                            new Intl.NumberFormat('pt-BR', {
-                                style: 'currency',
-                                currency: 'BRL',
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                            }).format(data.revenue)}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                        +20.1% em relação ao mês passado
-                    </p>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardDescription>Vendas</CardDescription>
-                    <span className="bg-green-500/20 text-green-600 p-2 rounded-sm">
-                        <ShoppingCart className="h-4 w-4" />
+                }
+            >
+                {formatCurrency(data.revenue)}
+            </CardInsight>
+            <CardInsight
+                title="Vendas"
+                icon={
+                    <span className="p-2 w-fit rounded-sm bg-orange-200 text-orange-700">
+                        <Handshake className="w-5 h-5" />
                     </span>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        {data && data.sales}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                        +180.1% em relação ao mês passado
-                    </p>
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardDescription>Percentual de Instalação</CardDescription>
-                    <span className="bg-blue-500/20 text-blue-600 p-2 rounded-sm">
-                        <TrendingUp className="h-4 w-4" />
+                }
+            >
+                {data.sales}
+            </CardInsight>
+            <CardInsight
+                title="Percentual de instalação"
+                icon={
+                    <span className="p-2 w-fit rounded-sm bg-green-200 text-green-700">
+                        <Percent className="w-5 h-5" />
                     </span>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-2xl font-bold">
-                        {data &&
-                            new Intl.NumberFormat('pt-BR', {
-                                style: 'percent',
-                            }).format(data.completionRate)}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                        +12.3% em relação ao mês passado
-                    </p>
-                </CardContent>
-            </Card>
-        </div>
+                }
+            >
+                {formatPercentage(data.completionRate)}
+            </CardInsight>
+        </section>
     );
 }

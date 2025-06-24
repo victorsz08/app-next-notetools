@@ -21,7 +21,7 @@ import {
 
 export const description = 'A donut chart with text';
 
-type ChartDataType = {
+export type ChartDataType = {
     status: string;
     quantidade: number;
     fill?: string;
@@ -45,15 +45,17 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
-    const totalVisitors = React.useMemo(() => {
+    const totalSales = React.useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.quantidade, 0);
     }, []);
 
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center flex flex-col justify-center gap-0 pb-0">
-                <CardTitle className="text-lg font-semibold">Vendas</CardTitle>
-                <CardDescription className="text-xs">
+                <CardTitle className="text-lg font-semibold text-muted-foreground/80">
+                    Vendas
+                </CardTitle>
+                <CardDescription className="text-xs tracking-tight text-muted-foreground/60">
                     Vendas totais nesse mês
                 </CardDescription>
             </CardHeader>
@@ -91,14 +93,14 @@ export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-3xl font-bold"
+                                                    className="fill-muted-foreground/80 text-2xl font-bold"
                                                 >
-                                                    {totalVisitors.toLocaleString()}
+                                                    {totalSales.toLocaleString()}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={(viewBox.cy || 0) + 24}
-                                                    className="fill-muted-foreground"
+                                                    className="fill-muted-foreground/60 text-xs"
                                                 >
                                                     Vendas
                                                 </tspan>

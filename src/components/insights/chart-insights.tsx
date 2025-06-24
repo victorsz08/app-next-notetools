@@ -1,54 +1,87 @@
 'use client';
 
+import { DataInsightsPerDay, DataInsightsStatus } from '@/@types';
 import { useAuth } from '@/context/auth-context';
-import { getInsightStatus } from '@/data/get-insight-status';
+import { api } from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
+import moment from 'moment';
 import { Skeleton } from '../ui/skeleton';
-import { DonutChart } from '../charts/donut-chart';
+import { ChartDataType, DonutChart } from '../charts/donut-chart';
+import { ChartBar } from '../charts/bar-chart';
+
+const dateIn = moment().startOf('month').format('YYYY-MM-DD');
+const dateOut = moment().endOf('month').format('YYYY-MM-DD');
+
+const initialDataSales = [] as DataInsightsPerDay[];
+const initialDataStatus = {} as DataInsightsStatus;
 
 export function ChartInsights() {
     const { session } = useAuth();
     const userId = session?.id;
 
-    const { data, isPending } = useQuery({
-        queryFn: async () => {
-            const data = await getInsightStatus(userId);
-            return data;
-        },
-        queryKey: ['insight-status'],
+    const getInsightsStatus = async () => {
+        const response = await api.get(
+            `insights/status/${userId}?dateIn=${dateIn}&dateOut=${dateOut}`
+        );
+        return response.data;
+    };
+
+    const getInsightsSales = async () => {
+        const response = await api.get(
+            `insights/per-day/${userId}?dateIn=${dateIn}&dateOut=${dateOut}`
+        );
+        console.log(response.data);
+        return response.data.sales;
+    };
+
+    const { data: sales, isFetching: isFetchingSales } = useQuery<
+        DataInsightsPerDay[]
+    >({
+        queryFn: getInsightsSales,
+        queryKey: ['insights', 'sales', userId, dateIn, dateOut],
         enabled: !!userId,
+        initialData: initialDataSales,
     });
 
-    const chartData = [
-        {
-            status: 'Conectados',
-            quantidade: data?.connected || 0,
-            fill: 'var(--chart-1)',
-        },
-        {
-            status: 'Pendentes',
-            quantidade: data?.pending || 0,
-            fill: 'var(--chart-2)',
-        },
-        {
-            status: 'Cancelados',
-            quantidade: data?.cancelled || 0,
-            fill: 'var(--chart-3)',
-        },
-    ];
+    const { data: status, isFetching: isFetchingStatus } =
+        useQuery<DataInsightsStatus>({
+            queryFn: getInsightsStatus,
+            queryKey: ['insights', 'status', userId, dateIn, dateOut],
+            enabled: !!userId,
+            initialData: initialDataStatus,
+        });
 
-    if (isPending) {
+    if (isFetchingSales || isFetchingStatus) {
         return (
-            <div className='flex gap-4 w-full'>
-                <Skeleton className="w-[360px] h-[320px] bg-muted-foreground/40 rounded-lg" />
-                <Skeleton className="w-full h-[320px] bg-muted-foreground/40 rounded-lg" />
+            <div className="flex gap-4 w-full">
+                <Skeleton className="w-[360px] h-64" />
+                <Skeleton className="w-full h-64" />
             </div>
         );
     }
 
+    const dataStatus: ChartDataType[] = [
+        {
+            status: 'Conectados',
+            quantidade: status.connected,
+            fill: 'var(--chart-1)',
+        },
+        {
+            status: 'Pendentes',
+            quantidade: status.pending,
+            fill: 'var(--chart-2)',
+        },
+        {
+            status: 'Cancelados',
+            quantidade: status.cancelled,
+            fill: 'var(--chart-3)',
+        },
+    ];
+
     return (
-        <div className='flex gap-4 w-full'>
-            <DonutChart chartData={chartData} />
-        </div>
+        <section className="flex gap-4 w-full">
+            <DonutChart chartData={dataStatus} />
+            <ChartBar data={sales} />
+        </section>
     );
 }
