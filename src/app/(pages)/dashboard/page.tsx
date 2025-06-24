@@ -1,6 +1,7 @@
 import { ChartInsights } from '@/components/insights/chart-insights';
 import { Insights } from '@/components/insights/insights';
 import { Metadata } from 'next';
+import { DailyOrder } from '@/components/data-order/daily-order';
 
 export const metadata: Metadata = {
     title: 'Dashboard',
@@ -14,6 +15,7 @@ export default function Dashboard() {
             </h2>
             <Insights />
             <ChartInsights />
+            <DailyOrder/>
         </section>
     );
 }
