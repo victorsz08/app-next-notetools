@@ -72,7 +72,7 @@ export function DailyOrder() {
     }
 
     return (
-        <Card className="w-full shadow-none">
+        <Card className="w-full shadow-none space-y-5">
             {data.length > 0 ? (
                 <>
                     <CardHeader>
@@ -83,11 +83,11 @@ export function DailyOrder() {
                             Pedidos com datas previstas para hoje.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                         <div className="flex justify-end mb-1 w-full">
                             <CreateOrderForm />
                         </div>
-                        <Separator />
+                        <Separator className="mt-4" />
                         <DataTable data={data} />
                     </CardContent>
                 </>
