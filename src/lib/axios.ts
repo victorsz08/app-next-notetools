@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/';
+// https://pktwx3-8000.csb.app/
+const BASE_URL = 'https://pktwx3-8000.csb.app/';
 
 export const api = axios.create({
     baseURL: BASE_URL,

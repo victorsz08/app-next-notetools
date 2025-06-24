@@ -13,7 +13,11 @@ const dateIn = moment().startOf('month').format('YYYY-MM-DD');
 const dateOut = moment().endOf('month').format('YYYY-MM-DD');
 
 const initialDataSales = [] as DataInsightsPerDay[];
-const initialDataStatus = {} as DataInsightsStatus;
+const initialDataStatus: DataInsightsStatus = {
+    connected: 0,
+    pending: 0,
+    cancelled: 0
+} as DataInsightsStatus;
 
 export function ChartInsights() {
     const { session } = useAuth();
@@ -54,8 +58,8 @@ export function ChartInsights() {
     if (isFetchingSales || isFetchingStatus) {
         return (
             <div className="flex gap-4 w-full">
-                <Skeleton className="w-[360px] h-64" />
-                <Skeleton className="w-full h-64" />
+                <Skeleton className="w-[360px] h-64 bg-muted-foreground/80" />
+                <Skeleton className="w-full h-64 bg-muted-foreground/80" />
             </div>
         );
     }
@@ -80,7 +84,7 @@ export function ChartInsights() {
 
     return (
         <section className="flex gap-4 w-full">
-            <DonutChart chartData={dataStatus} />
+            <DonutChart data={dataStatus} />
             <ChartBar data={sales} />
         </section>
     );

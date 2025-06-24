@@ -44,9 +44,9 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
+export function DonutChart({ data }: { data: ChartDataType[] }) {
     const totalSales = React.useMemo(() => {
-        return chartData.reduce((acc, curr) => acc + curr.quantidade, 0);
+        return data.reduce((acc, curr) => acc + curr.quantidade, 0);
     }, []);
 
     return (
@@ -70,7 +70,7 @@ export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
                             content={<ChartTooltipContent hideLabel />}
                         />
                         <Pie
-                            data={chartData}
+                            data={data}
                             dataKey="quantidade"
                             nameKey="status"
                             innerRadius={60}
@@ -114,7 +114,7 @@ export function DonutChart({ chartData }: { chartData: ChartDataType[] }) {
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex flex-row justify-center items-center gap-2 text-sm">
-                {chartData.map((item, index) => (
+                {data.map((item, index) => (
                     <div
                         className="flex flex-col justify-center items-center"
                         key={index}
