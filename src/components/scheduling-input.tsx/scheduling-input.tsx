@@ -40,46 +40,50 @@ export function SchedulingInput({
   }
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={`h-10 w-full justify-start text-left font-normal ${className}`}
-          disabled={disabled}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date && time ? `${moment(date).format("DD/MM/YYYY")} - ${time}` : placeholder}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <div className="flex">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={handleDateChange}
-            disabled={(d) => d < moment().startOf("day").toDate()}
-            locale={ptBR}
-            className="rounded-md border-r"
-          />
-          <div className="p-3 border-l">
-            <div className="text-sm font-medium mb-3">Horários disponíveis</div>
-            <div className="grid gap-2 min-w-[140px]">
-              {timeOptions.map((t, index) => (
-                <Button
-                  key={index}
-                  variant={t === time ? "default" : "outline"}
-                  size="sm"
-                  className="justify-start text-xs"
-                  onClick={() => handleTimeChange(t)}
-                  type="button"
-                >
-                  {t}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  )
+      <Popover>
+          <PopoverTrigger asChild>
+              <Button
+                  variant="outline"
+                  className={`h-12 w-full text-sm justify-start text-left font-normal ${className}`}
+                  disabled={disabled}
+              >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date && time
+                      ? `${moment(date).format('DD MMM YYYY')} - ${time}`
+                      : placeholder}
+              </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+              <div className="flex">
+                  <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={handleDateChange}
+                      disabled={(d) => d < moment().startOf('day').toDate()}
+                      locale={ptBR}
+                      className="rounded-md border-r"
+                  />
+                  <div className="p-3 border-l">
+                      <div className="text-sm font-medium mb-3">
+                          Horários disponíveis
+                      </div>
+                      <div className="grid gap-2 min-w-[140px]">
+                          {timeOptions.map((t, index) => (
+                              <Button
+                                  key={index}
+                                  variant={t === time ? 'default' : 'outline'}
+                                  size="sm"
+                                  className="justify-start text-xs"
+                                  onClick={() => handleTimeChange(t)}
+                                  type="button"
+                              >
+                                  {t}
+                              </Button>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          </PopoverContent>
+      </Popover>
+  );
 }

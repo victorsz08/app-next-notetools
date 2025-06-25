@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import moment from 'moment';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { number, z } from 'zod';
 import {
     Dialog,
     DialogClose,
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,9 @@ import {
     SchedulingData,
     SchedulingInput,
 } from '../scheduling-input.tsx/scheduling-input';
+import { useMutation } from '@tanstack/react-query';
+import { api } from '@/lib/axios';
+import { useAuth } from '@/context/auth-context';
 
 const createOrderSchema = z.object({
     number: z.coerce.number().min(1, 'número do contrato não pode ser vazio'),
@@ -47,6 +50,40 @@ type CreateOrderForm = z.infer<typeof createOrderSchema>;
 
 export function CreateOrderForm() {
     const [open, setOpen] = useState<boolean>(false);
+    const { session } = useAuth();
+    const userId = session?.id;
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (data: CreateOrderForm) => {
+            const response = await api.post(`orders/${userId}`, {
+                number: data.number,
+                local: data.local,
+                schedulingDate: data.schedulingDate,
+                schedulingTime: data.schedulingTime,
+                price: Number(data.price.replace(',', '.').replace('R$', '')),
+                contact: data.contact,
+            });
+
+            console.log(response);
+            if (response.status === 400) {
+                return;
+            }
+
+            return;
+        },
+        mutationKey: ['create-order'],
+        onSuccess: () => {
+            form.reset();
+            setOpen(false);
+        },
+        onError: (error: any) => {
+            console.log(error.response.data.details[0].issue);
+            error.response.data.details.forEach((err: any) => {
+                form.setError(err.issue, {
+                    message: err.message,
+                });
+            });
+        },
+    });
 
     const form = useForm<CreateOrderForm>({
         resolver: zodResolver(createOrderSchema),
@@ -81,9 +118,7 @@ export function CreateOrderForm() {
     };
 
     function onSubmit(data: CreateOrderForm) {
-        console.log('Form submitted:', data);
-        setOpen(false);
-        form.reset();
+        mutate(data);
     }
 
     return (
@@ -100,7 +135,7 @@ export function CreateOrderForm() {
                     </span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="space-y-8 w-[700px] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="space-y-8 min-w-[40vw] overflow-y-auto flex flex-col justify-between">
                 <DialogHeader className="flex flex-col justify-center items-center gap-0">
                     <DialogTitle className="text-lg font-bold tracking-tight text-muted-foreground/90">
                         Novo pedido
@@ -127,11 +162,11 @@ export function CreateOrderForm() {
                                         </Label>
                                         <Input
                                             id="number"
-                                            className="h-10"
+                                            className="h-12"
                                             type="text"
                                             {...field}
                                         />
-                                        <FormMessage className="text-[10px]" />
+                                        <FormMessage className="text-[10px] ml-1" />
                                     </FormItem>
                                 )}
                             />
@@ -150,7 +185,7 @@ export function CreateOrderForm() {
                                             value={field.value}
                                             onChange={field.onChange}
                                         />
-                                        <FormMessage className="text-[10px]" />
+                                        <FormMessage className="text-[10px] ml-1" />
                                     </FormItem>
                                 )}
                             />
@@ -168,7 +203,7 @@ export function CreateOrderForm() {
                                         </Label>
                                         <Input
                                             id="price"
-                                            className="h-10"
+                                            className="h-12"
                                             value={field.value}
                                             onChange={(e) => {
                                                 field.onChange(
@@ -176,7 +211,7 @@ export function CreateOrderForm() {
                                                 );
                                             }}
                                         />
-                                        <FormMessage className="text-[10px]" />
+                                        <FormMessage className="text-[10px] ml-1" />
                                     </FormItem>
                                 )}
                             />
@@ -194,11 +229,11 @@ export function CreateOrderForm() {
                                         </Label>
                                         <Input
                                             id="contact"
-                                            className="h-10"
+                                            className="h-12"
                                             type="text"
                                             {...field}
                                         />
-                                        <FormMessage className="text-[10px]" />
+                                        <FormMessage className="text-[10px] ml-1" />
                                     </FormItem>
                                 )}
                             />
@@ -227,7 +262,7 @@ export function CreateOrderForm() {
                                                 }
                                                 placeholder="Selecionar data e horário"
                                             />
-                                            <FormMessage className="text-[10px]" />
+                                            <FormMessage className="text-[10px] ml-1" />
                                         </FormItem>
                                     )}
                                 />
@@ -239,7 +274,12 @@ export function CreateOrderForm() {
                                     Cancelar
                                 </Button>
                             </DialogClose>
-                            <Button type="submit">Criar pedido</Button>
+                            <Button type="submit" disabled={isPending}>
+                                {isPending ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : null}
+                                Criar pedido
+                            </Button>
                         </div>
                     </form>
                 </Form>
