@@ -1,18 +1,14 @@
-import { OrderPage } from "@/components/data-order/data-order";
-import { Metadata } from "next";
-
-
-
+import {OrderPage} from "@/components/data-order/data-order";
+import {Metadata} from "next";
 
 export const metadata: Metadata = {
-    title: "Meus pedidos"
+    title: "Meus pedidos",
 };
-
 
 export default function PedidosPage() {
     return (
-        <main>
-            <OrderPage/>
+        <main className="p-4">
+            <OrderPage />
         </main>
-    )
+    );
 }
