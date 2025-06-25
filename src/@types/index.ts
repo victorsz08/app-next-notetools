@@ -36,3 +36,11 @@ export type DataInsightsPerDay = {
     day: string;
     quantity: number;
 };
+
+export type DataNote = {
+    id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+};
