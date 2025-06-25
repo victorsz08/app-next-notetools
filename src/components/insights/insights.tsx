@@ -56,6 +56,7 @@ export function Insights() {
         queryKey: ['insights'],
         enabled: !!userId,
         initialData,
+        refetchOnWindowFocus: false,
     });
 
     if (isFetching) {

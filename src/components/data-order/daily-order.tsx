@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import {DataOrder} from "@/@types";
-import {DataTable} from "../table/data-table";
+import { DataOrder } from '@/@types';
+import { DataTable } from '../table/data-table';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "../ui/card";
-import {useAuth} from "@/context/auth-context";
-import {useQuery} from "@tanstack/react-query";
-import {Skeleton} from "../ui/skeleton";
-import {api} from "@/lib/axios";
-import moment from "moment";
-import {CreateOrderForm} from "../forms/create-order";
-import {Separator} from "../ui/separator";
-import {NotFoundOrder} from "./not-found-order";
+} from '../ui/card';
+import { useAuth } from '@/context/auth-context';
+import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from '../ui/skeleton';
+import { api } from '@/lib/axios';
+import moment from 'moment';
+import { CreateOrderForm } from '../forms/create-order';
+import { Separator } from '../ui/separator';
+import { NotFoundOrder } from './not-found-order';
 
-const dateIn = moment().startOf("month").format("YYYY-MM-DD");
-const dateOut = moment().endOf("month").format("YYYY-MM-DD");
+const dateIn = moment().startOf('month').format('YYYY-MM-DD');
+const dateOut = moment().endOf('month').format('YYYY-MM-DD');
 
 export function DailyOrder() {
-    const {session} = useAuth();
+    const { session } = useAuth();
     const userId = session?.id;
 
     const getDailyOrders = async () => {
@@ -33,36 +33,12 @@ export function DailyOrder() {
         return response.data.orders;
     };
 
-    const {data, isFetching} = useQuery<DataOrder[]>({
+    const { data, isFetching } = useQuery<DataOrder[]>({
         queryFn: getDailyOrders,
-        queryKey: ["orders"],
+        queryKey: ['orders'],
         enabled: !!userId,
-        initialData: [
-            {
-                id: "124",
-                number: 12345,
-                local: "São Paulo/SP",
-                schedulingDate: "2025-06-01",
-                schedulingTime: "12:00 as 15:00",
-                status: "PENDENTE",
-                contact: "88 88888-8888",
-                price: 119.9,
-                createdAt: "2025-06-01",
-                updatedAt: "2025-06-01",
-            },
-            {
-                id: "123",
-                number: 12345,
-                local: "São Paulo/SP",
-                schedulingDate: "2025-06-01",
-                schedulingTime: "12:00 as 15:00",
-                status: "PENDENTE",
-                contact: "88 88888-8888",
-                price: 119.9,
-                createdAt: "2025-06-01",
-                updatedAt: "2025-06-01",
-            },
-        ],
+        initialData: [],
+        refetchOnWindowFocus: false,
     });
 
     if (isFetching) {

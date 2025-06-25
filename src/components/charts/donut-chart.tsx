@@ -19,8 +19,6 @@ import {
     ChartTooltipContent,
 } from '@/components/ui/chart';
 
-export const description = 'A donut chart with text';
-
 export type ChartDataType = {
     status: string;
     quantidade: number;

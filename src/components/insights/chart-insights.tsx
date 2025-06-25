@@ -16,7 +16,7 @@ const initialDataSales = [] as DataInsightsPerDay[];
 const initialDataStatus: DataInsightsStatus = {
     connected: 0,
     pending: 0,
-    cancelled: 0
+    cancelled: 0,
 } as DataInsightsStatus;
 
 export function ChartInsights() {
@@ -45,6 +45,7 @@ export function ChartInsights() {
         queryKey: ['insights', 'sales', userId, dateIn, dateOut],
         enabled: !!userId,
         initialData: initialDataSales,
+        refetchOnWindowFocus: false,
     });
 
     const { data: status, isFetching: isFetchingStatus } =
@@ -53,6 +54,7 @@ export function ChartInsights() {
             queryKey: ['insights', 'status', userId, dateIn, dateOut],
             enabled: !!userId,
             initialData: initialDataStatus,
+            refetchOnWindowFocus: false,
         });
 
     if (isFetchingSales || isFetchingStatus) {

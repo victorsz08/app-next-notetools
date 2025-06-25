@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import {zodResolver} from "@hookform/resolvers/zod";
-import moment from "moment";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import moment from 'moment';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import {
     Dialog,
     DialogClose,
@@ -12,47 +12,36 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "../ui/dialog";
-import {useState} from "react";
-import {Button} from "../ui/button";
-import {Plus} from "lucide-react";
-import {Form, FormControl, FormField, FormItem, FormMessage} from "../ui/form";
-import {Label} from "../ui/label";
-import {Input} from "../ui/input";
-import {Separator} from "../ui/separator";
+} from '@/components/ui/dialog';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { Form, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+
+import { CidadeCombobox } from '../command-input/command-input';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../ui/select";
-import {formatCurrency} from "@/lib/utils";
-import DatePicker from "../comp-490";
+    SchedulingData,
+    SchedulingInput,
+} from '../scheduling-input.tsx/scheduling-input';
 
 const createOrderSchema = z.object({
-    number: z.coerce.number().min(1, "número do contrato não pode ser vazio"),
-    local: z.string().nonempty("o campo cidade é obrigatório"),
+    number: z.coerce.number().min(1, 'número do contrato não pode ser vazio'),
+    local: z.string().nonempty('o campo cidade é obrigatório'),
     schedulingDate: z.coerce
         .date()
         .min(
-            moment().startOf("day").toDate(),
-            "A data de agendamento deve ser maior ou igual a data atual"
+            moment().startOf('day').toDate(),
+            'A data de agendamento deve ser maior ou igual a data atual'
         ),
     schedulingTime: z
         .string()
-        .nonempty("o campo horário de agendamento é obrigatório"),
-    price: z.string().nonempty("o campo valor é obrigatório"),
-    contact: z.string().nonempty("o cmapo contato é obrigatório"),
+        .nonempty('o campo horário de agendamento é obrigatório'),
+    price: z.string().nonempty('o campo valor é obrigatório'),
+    contact: z.string().nonempty('o campo contato é obrigatório'),
 });
-
-const timeOptions = [
-    "08:00 - 12:00",
-    "08:00 - 19:00",
-    "12:00 - 15:00",
-    "12:00 - 18:00",
-    "15:00 - 18:00",
-];
 
 type CreateOrderForm = z.infer<typeof createOrderSchema>;
 
@@ -63,23 +52,38 @@ export function CreateOrderForm() {
         resolver: zodResolver(createOrderSchema),
         defaultValues: {
             number: 0,
-            local: "",
+            local: '',
             schedulingDate: moment().toDate(),
-            schedulingTime: "",
-            price: "",
-            contact: "",
+            schedulingTime: '',
+            price: '',
+            contact: '',
         },
     });
 
     function formatPrice(value: string) {
-        const valuePrice = value.replace(/\D/g, "");
+        const valuePrice = value.replace(/\D/g, '');
 
-        return new Intl.NumberFormat("pt-BR", {
-            style: "currency",
-            currency: "BRL",
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }).format(Number(valuePrice) / 100);
+    }
+
+    const handleSchedulingChange = (data: SchedulingData) => {
+        if (data.date) {
+            form.setValue('schedulingDate', data.date);
+        }
+        if (data.time) {
+            form.setValue('schedulingTime', data.time);
+        }
+    };
+
+    function onSubmit(data: CreateOrderForm) {
+        console.log('Form submitted:', data);
+        setOpen(false);
+        form.reset();
     }
 
     return (
@@ -96,7 +100,7 @@ export function CreateOrderForm() {
                     </span>
                 </Button>
             </DialogTrigger>
-            <DialogContent className="space-y-4">
+            <DialogContent className="space-y-8 w-[700px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader className="flex flex-col justify-center items-center gap-0">
                     <DialogTitle className="text-lg font-bold tracking-tight text-muted-foreground/90">
                         Novo pedido
@@ -107,12 +111,12 @@ export function CreateOrderForm() {
                 </DialogHeader>
                 <Separator />
                 <Form {...form}>
-                    <form>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="grid grid-cols-2 gap-6">
                             <FormField
                                 control={form.control}
                                 name="number"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem className="group relative">
                                         <Label
                                             htmlFor="number"
@@ -134,7 +138,7 @@ export function CreateOrderForm() {
                             <FormField
                                 control={form.control}
                                 name="local"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem className="group relative">
                                         <Label
                                             htmlFor="local"
@@ -142,38 +146,18 @@ export function CreateOrderForm() {
                                         >
                                             Cidade
                                         </Label>
-                                        <Select
+                                        <CidadeCombobox
                                             value={field.value}
-                                            onValueChange={field.onChange}
-                                        >
-                                            <SelectTrigger
-                                                id="local"
-                                                className="h-10"
-                                            >
-                                                <SelectValue placeholder="Selecione uma cidade" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="1">
-                                                    React
-                                                </SelectItem>
-                                                <SelectItem value="2">
-                                                    Next.js
-                                                </SelectItem>
-                                                <SelectItem value="3">
-                                                    Astro
-                                                </SelectItem>
-                                                <SelectItem value="4">
-                                                    Gatsby
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                            onChange={field.onChange}
+                                        />
+                                        <FormMessage className="text-[10px]" />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="price"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem className="group relative">
                                         <Label
                                             htmlFor="price"
@@ -199,7 +183,7 @@ export function CreateOrderForm() {
                             <FormField
                                 control={form.control}
                                 name="contact"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem className="group relative">
                                         <Label
                                             htmlFor="contact"
@@ -218,73 +202,44 @@ export function CreateOrderForm() {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="schedulingDate"
-                                render={({field}) => (
-                                    <FormItem className="group relative">
-                                        <Label
-                                            htmlFor="scheduling-date"
-                                            className="bg-background text-foreground absolute start-1 top-0 z-10 
-                                            block -translate-y-1/2 px-2 text-xs font-medium group-has-disabled:opacity-50"
-                                        >
-                                            Data de agendamento
-                                        </Label>
-                                        <DatePicker
-                                            date={field.value}
-                                            setDate={field.onChange}
-                                        />
-                                        <FormMessage className="text-[10px]" />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="schedulingTime"
-                                render={({field}) => (
-                                    <FormItem className="group relative">
-                                        <Label
-                                            htmlFor="scheduling-time"
-                                            className="bg-background text-foreground absolute start-1 top-0 z-10 block -translate-y-1/2 px-2 text-xs font-medium group-has-disabled:opacity-50"
-                                        >
-                                            Cidade
-                                        </Label>
-                                        <Select
-                                            defaultValue={field.value}
-                                            onValueChange={field.onChange}
-                                        >
-                                            <SelectTrigger
-                                                id="scheduling-time"
-                                                className="h-10"
+                            <div className="col-span-2">
+                                <FormField
+                                    control={form.control}
+                                    name="schedulingDate"
+                                    render={({ field }) => (
+                                        <FormItem className="group relative">
+                                            <Label
+                                                htmlFor="scheduling"
+                                                className="bg-background text-foreground absolute start-1 top-0 z-10 
+                                                block -translate-y-1/2 px-2 text-xs font-medium group-has-disabled:opacity-50"
                                             >
-                                                <FormControl>
-                                                    <SelectValue placeholder="Selecione uma cidade" />
-                                                </FormControl>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {timeOptions.map(
-                                                    (item, index) => (
-                                                        <SelectItem
-                                                            key={index}
-                                                            value={item}
-                                                        >
-                                                            {item}
-                                                        </SelectItem>
-                                                    )
+                                                Agendamento
+                                            </Label>
+                                            <SchedulingInput
+                                                date={form.watch(
+                                                    'schedulingDate'
                                                 )}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormItem>
-                                )}
-                            />
+                                                time={form.watch(
+                                                    'schedulingTime'
+                                                )}
+                                                onChange={
+                                                    handleSchedulingChange
+                                                }
+                                                placeholder="Selecionar data e horário"
+                                            />
+                                            <FormMessage className="text-[10px]" />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
                         </div>
-                        <div className="flex mt-4 items-center w-full gap-2 justify-end">
+                        <div className="flex mt-10 items-center w-full gap-2 justify-end">
                             <DialogClose asChild>
                                 <Button type="button" variant="outline">
                                     Cancelar
                                 </Button>
                             </DialogClose>
-                            <Button type="submit">Criar</Button>
+                            <Button type="submit">Criar pedido</Button>
                         </div>
                     </form>
                 </Form>
