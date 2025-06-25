@@ -34,7 +34,6 @@ export function ChartInsights() {
         const response = await api.get(
             `insights/per-day/${userId}?dateIn=${dateIn}&dateOut=${dateOut}`
         );
-        console.log(response.data);
         return response.data.sales;
     };
 

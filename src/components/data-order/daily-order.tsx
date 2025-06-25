@@ -18,8 +18,8 @@ import { CreateOrderForm } from '../forms/create-order';
 import { Separator } from '../ui/separator';
 import { NotFoundOrder } from './not-found-order';
 
-const dateIn = moment().startOf('month').format('YYYY-MM-DD');
-const dateOut = moment().endOf('month').format('YYYY-MM-DD');
+const dateIn = moment().startOf('day').format('YYYY-MM-DD');
+const dateOut = moment().endOf('day').format('YYYY-MM-DD');
 
 export function DailyOrder() {
     const { session } = useAuth();
@@ -27,7 +27,7 @@ export function DailyOrder() {
 
     const getDailyOrders = async () => {
         const response = await api.get(
-            `orders/list/${userId}?page=1&limit=10&schedulingDateIn=${dateIn}&shcedulingDateOut=${dateOut}`
+            `orders/list/${userId}?page=1&limit=10&schedulingDateIn=${dateIn}&schedulingDateOut=${dateOut}`
         );
 
         return response.data.orders;

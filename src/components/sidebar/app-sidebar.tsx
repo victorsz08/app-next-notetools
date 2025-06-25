@@ -35,18 +35,18 @@ import {NavLink} from "./nav-link";
 
 const items = [
     {
-        title: "Dashboard",
-        href: "/dashboard",
+        title: 'Dashboard',
+        href: '/dashboard',
         icon: Home,
     },
     {
-        title: "Contratos",
-        href: "/contratos",
+        title: 'Contratos',
+        href: '/pedidos',
         icon: Clipboard,
     },
     {
-        title: "Anotações",
-        href: "/anotacoes",
+        title: 'Anotações',
+        href: '/anotacoes',
         icon: Notebook,
     },
 ];

@@ -1,9 +1,10 @@
-export type StatusType = 'CONECTADO' | 'PENDENTE' | 'CANCELADO';
+export type StatusType = 'CONECTADO' | 'PENDENTE' | 'CANCELADO' | 'ALL';
 
 export const StatusType = {
     CONECTADO: 'CONECTADO' as StatusType,
     PENDENTE: 'PENDENTE' as StatusType,
     CANCELADO: 'CANCELADO' as StatusType,
+    ALL: 'ALL' as StatusType,
 } as const;
 
 export type DataOrder = {
