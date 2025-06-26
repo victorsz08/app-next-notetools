@@ -65,6 +65,9 @@ export function CreateOrderForm() {
             });
 
             if (response.status === 400) {
+                toast.error(
+                    'Ocorreu um erro na criação do pedido, tente novamente mais tarde'
+                );
                 return;
             }
 

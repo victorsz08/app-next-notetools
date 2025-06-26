@@ -10,12 +10,17 @@ export const metadata: Metadata = {
 export default function Dashboard() {
     return (
         <section className="p-4 space-y-5">
-            <h2 className="text-xl font-bold text-muted-foreground">
-                Dashboard
-            </h2>
+            <div className="flex flex-col gap-0">
+                <h2 className="text-xl font-bold text-muted-foreground">
+                    Dashboard
+                </h2>
+                <small className="text-xs font-light text-muted-foregorund/70">
+                    Gerencie suas métricas.
+                </small>
+            </div>
             <Insights />
             <ChartInsights />
-            <DailyOrder/>
+            <DailyOrder />
         </section>
     );
 }
