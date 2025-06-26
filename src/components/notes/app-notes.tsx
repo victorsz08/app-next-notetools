@@ -14,6 +14,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import moment from 'moment';
 import ReactQuill from 'react-quill';
+import { TextEditor } from '../rich-editor/editor';
 
 export function NotesApp() {
     const queryClient = useQueryClient();
@@ -32,15 +33,7 @@ export function NotesApp() {
         queryKey: ['notes'],
         enabled: !!userId,
         refetchOnWindowFocus: false,
-        initialData: [
-            {
-                id: '1234',
-                title: 'new note',
-                content: '<p>Hello world</p>',
-                createdAt: '2025-01-01',
-                updatedAt: '2025-01-01',
-            },
-        ],
+        initialData: [],
     });
 
     const [selectedNote, setSelectedNote] = useState<DataNote | null>(notes[0]);
@@ -84,6 +77,7 @@ export function NotesApp() {
         mutationKey: ['delete-note'],
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notes'] });
+            setSelectedNote(null);
         },
     });
 
@@ -107,14 +101,14 @@ export function NotesApp() {
     };
 
     return (
-        <div className="flex h-screen bg-white">
+        <div className="flex h-[90vh] bg-white">
             {/* Sidebar - Lista de Notas */}
             <div className="w-80 border-r bg-muted/30">
                 <div className="p-4 border-b">
                     <div className="flex items-center justify-between mb-4">
                         <h1 className="text-xl font-semibold">Anotações</h1>
                         <Button
-                            onClick={() => createNote}
+                            onClick={() => createNote()}
                             size="sm"
                             className="gap-2"
                         >
@@ -145,14 +139,14 @@ export function NotesApp() {
                             filteredNotes.map((note) => (
                                 <Card
                                     key={note.id}
-                                    className={`mb-2 cursor-pointer transition-colors hover:bg-muted/50 ${
+                                    className={`flex mb-2 flex-col justify-between w-[300px] h-[150px] cursor-pointer transition-colors hover:bg-muted/50 ${
                                         selectedNote?.id === note.id
                                             ? 'ring-2 ring-primary bg-muted/50'
                                             : ''
                                     }`}
                                     onClick={() => setSelectedNote(note)}
                                 >
-                                    <CardHeader className="pb-2">
+                                    <CardHeader>
                                         <div className="flex items-start justify-between">
                                             <h3 className="font-medium text-sm line-clamp-1">
                                                 {note.title}
@@ -172,10 +166,13 @@ export function NotesApp() {
                                         </div>
                                     </CardHeader>
                                     <CardContent className="pt-0">
-                                        <p className="text-sm text-muted-foreground line-clamp-2">
-                                            {note.content || 'Sem conteúdo'}
+                                        <p className="text-xs mb-1 text-muted-foreground line-clamp-2">
+                                            {note.content
+                                                .replace(/<[^>]*>/g, '')
+                                                .substring(20) ||
+                                                'Sem conteúdo'}
                                         </p>
-                                        <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
                                             <Calendar className="w-3 h-3" />
                                             {formatDate(
                                                 moment(note.updatedAt).toDate()
@@ -193,7 +190,6 @@ export function NotesApp() {
             <div className="flex-1 flex flex-col">
                 {selectedNote ? (
                     <>
-                        {/* Header do Editor */}
                         <div className="p-4 border-b bg-white">
                             <div className="flex items-center justify-between">
                                 <div className="flex-1">
@@ -201,14 +197,19 @@ export function NotesApp() {
                                         <Input
                                             value={selectedNote.title}
                                             onChange={(e) =>
-                                                updateNote(selectedNote)
+                                                setSelectedNote({
+                                                    ...selectedNote,
+                                                    title: e.target.value,
+                                                })
                                             }
-                                            onBlur={() =>
-                                                setEditingTitle(false)
-                                            }
+                                            onBlur={() => {
+                                                setEditingTitle(false);
+                                                updateNote(selectedNote);
+                                            }}
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter') {
                                                     setEditingTitle(false);
+                                                    updateNote(selectedNote);
                                                 }
                                             }}
                                             className="text-xl font-semibold border-none p-0 h-auto focus-visible:ring-0"
@@ -250,11 +251,18 @@ export function NotesApp() {
                             </div>
                         </div>
                         <div className="flex-1 p-4">
-                            <Textarea 
-                                value={selectedNote.content} 
-                                onChange={(e) => setSelectedNote(prev => {...prev, content: e.target.value})}
-                                placeholder="Comece a escrever sua anotação..."
-                                className="w-full h-full resize-none border-none focus-visible:ring-0 text-base leading-relaxed"
+                            <TextEditor
+                                value={selectedNote.content}
+                                onChange={(content) => {
+                                    setSelectedNote({
+                                        ...selectedNote,
+                                        content: content,
+                                    });
+                                }}
+                                key={selectedNote.id}
+                                onBlur={() => {
+                                    updateNote(selectedNote);
+                                }}
                             />
                         </div>
                     </>
