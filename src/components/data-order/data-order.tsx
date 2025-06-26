@@ -50,7 +50,7 @@ export function OrderPage() {
     const { session } = useAuth();
     const userId = session?.id;
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState<number>(1);
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const [schedulingDateFilter, setSchedulingDateFilter] = useState<
         DateRange | undefined
@@ -109,21 +109,21 @@ export function OrderPage() {
         }
 
         const response = await api.get(
-            `orders/list/${userId}?page=${page}&limit=10${params.toString()}`
+            `orders/list/${userId}?${params.toString()}`
         );
         const data: DataResponseOrder = response.data;
 
         return data;
     };
 
-    const { data, isFetching } = useQuery<DataResponseOrder>({
+    const { data, isPending } = useQuery<DataResponseOrder>({
         queryFn: getOrders,
         queryKey: [
             'orders',
             page,
             userId,
-            schedulingDateFilter?.to && schedulingDateFilter.from,
-            createdDateFilter?.to && createdDateFilter.from,
+            schedulingDateFilter,
+            createdDateFilter,
             statusFilter,
         ],
         enabled: !!userId,
@@ -131,9 +131,9 @@ export function OrderPage() {
         refetchOnWindowFocus: false,
     });
 
-    if (isFetching)
+    if (isPending)
         return (
-            <div className="p-4">
+            <div>
                 <Skeleton className="w-full h-screen bg-muted-foreground/30" />
             </div>
         );
@@ -147,7 +147,7 @@ export function OrderPage() {
 
     return (
         <section>
-            <Card className="w-full shadow-sm border-border/50">
+            <Card className="w-full border-border/50">
                 <CardHeader className="flex items-end justify-between">
                     <section className="flex flex-col gap-4">
                         {showFilters && (

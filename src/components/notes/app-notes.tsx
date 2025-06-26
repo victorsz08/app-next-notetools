@@ -101,7 +101,7 @@ export function NotesApp() {
     };
 
     return (
-        <div className="flex h-[90vh] bg-white">
+        <div className="flex h-screen bg-white">
             {/* Sidebar - Lista de Notas */}
             <div className="w-80 border-r bg-muted/30">
                 <div className="p-4 border-b">
