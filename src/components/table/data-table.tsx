@@ -87,7 +87,7 @@ export function DataTable({data}: {data: DataOrder[]}) {
                                 <StatusBadge status={item.status} />
                             </TableCell>
                             <TableCell>
-                                <MenuOrder />
+                                <MenuOrder order={item} />
                             </TableCell>
                         </TableRow>
                     ))}

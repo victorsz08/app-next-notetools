@@ -7,8 +7,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UpdateStatusOrder } from './forms/update-status-order';
+import { DataOrder } from '@/@types';
 
-export default function MenuOrder() {
+export default function MenuOrder({ order }: { order: DataOrder }) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -22,7 +24,9 @@ export default function MenuOrder() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem>Option 1</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <UpdateStatusOrder order={order} />
+                </DropdownMenuItem>
                 <DropdownMenuItem>Option 2</DropdownMenuItem>
                 <DropdownMenuItem>Option 3</DropdownMenuItem>
                 <DropdownMenuItem>Option 4</DropdownMenuItem>
