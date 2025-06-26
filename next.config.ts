@@ -1,7 +1,7 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+    allowedDevOrigins: ['https://n36xgh-3000.csb.app'],
 };
 
 export default nextConfig;

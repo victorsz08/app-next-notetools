@@ -9,7 +9,8 @@ import {
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import Link from 'next/link';
-import { UserRound } from 'lucide-react';
+import { LogOut, Settings, UserRound } from 'lucide-react';
+import { Separator } from '../ui/separator';
 
 export function AvatarProfile() {
     const { session } = useAuth();
@@ -17,7 +18,7 @@ export function AvatarProfile() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Avatar className="rounded-sm w-14 h-14">
+                <Avatar className="rounded-md text-muted-foregorund/80 w-10 h-10">
                     <AvatarImage alt={session?.username} />
                     <AvatarFallback>
                         {session?.firstName.charAt(0)}
@@ -25,12 +26,34 @@ export function AvatarProfile() {
                     </AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                <DropdownMenuItem className="text-muted-foreground/80 flex items-center gap-1">
-                    <UserRound className="w-3 h-3" />
-                    <Link href="/perfil" className="text-xs font-medium">
-                        perfil
-                    </Link>
+            <DropdownMenuContent align="end">
+                <DropdownMenuItem className="flex items-center gap-1">
+                    <span className="text-sm font-semibold text-muted-foreground/80">
+                        {session?.firstName} {session?.lastName}
+                    </span>
+                    <span className="text-xs font-medium text-muted-foreground/60">
+                        {session?.firstName} {session?.lastName}
+                    </span>
+                </DropdownMenuItem>
+                <Separator />
+                <Link href="/perfil" className="text-xs font-medium">
+                    <DropdownMenuItem className="text-muted-foreground/80 flex items-center gap-1">
+                        <UserRound className="w-3 h-3" />
+                        <span className="text-xs font-light">Perfil</span>
+                    </DropdownMenuItem>
+                </Link>
+                <Link href="/settings">
+                    <DropdownMenuItem className="text-muted-foreground/80 flex items-center gap-1">
+                        <Settings className="w-3 h-3" />
+                        <span className="text-xs font-light">
+                            Configurações
+                        </span>
+                    </DropdownMenuItem>
+                </Link>
+                <Separator />
+                <DropdownMenuItem className="text-red-700 mt-1 bg-red-100 w-full flex items-center gap-1">
+                    <LogOut className="w-3 h-3" />
+                    <span className="text-xs font-light">Sair</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
