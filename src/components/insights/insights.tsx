@@ -9,6 +9,7 @@ import { DataInsights } from '@/@types';
 import { Skeleton } from '../ui/skeleton';
 import { HandCoins, Handshake, Percent } from 'lucide-react';
 import { formatCurrency, formatPercentage } from '@/lib/utils';
+import { toast } from 'sonner';
 
 type CardInsightProps = {
     title: string;
@@ -47,6 +48,10 @@ export function Insights() {
         const response = await api.get(
             `insights/${userId}?dateIn=${dateIn}&dateOut=${dateOut}`
         );
+
+        if (response.status !== 200) {
+            toast.error('Erro ao carregar os seus relatórios!');
+        }
 
         return response.data;
     };

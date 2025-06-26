@@ -38,6 +38,7 @@ import { Badge } from '../ui/badge';
 import { OrderFilters } from '../filters/filter-order';
 import { CreateOrderForm } from '../forms/create-order';
 import { BadgeStatus } from '../badge/badge-filter';
+import { toast } from 'sonner';
 
 interface DataResponseOrder {
     orders: DataOrder[];
@@ -111,6 +112,9 @@ export function OrderPage() {
         const response = await api.get(
             `orders/list/${userId}?${params.toString()}`
         );
+        if (response.status !== 200) {
+            toast.error('Erro ao carregar os seus pedidos!');
+        }
         const data: DataResponseOrder = response.data;
 
         return data;

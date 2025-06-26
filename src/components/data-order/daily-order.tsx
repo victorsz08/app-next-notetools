@@ -17,6 +17,7 @@ import moment from 'moment';
 import { CreateOrderForm } from '../forms/create-order';
 import { Separator } from '../ui/separator';
 import { NotFoundOrder } from './not-found-order';
+import { toast } from 'sonner';
 
 const dateIn = moment().startOf('day').format('YYYY-MM-DD');
 const dateOut = moment().endOf('day').format('YYYY-MM-DD');
@@ -30,6 +31,10 @@ export function DailyOrder() {
             `orders/list/${userId}?page=1&limit=10&schedulingDateIn=${dateIn}&schedulingDateOut=${dateOut}`
         );
 
+        if (response.status !== 200) {
+            toast.error('Erro ao carregar os pedidos');
+        }
+
         return response.data.orders;
     };
 
@@ -37,7 +42,20 @@ export function DailyOrder() {
         queryFn: getDailyOrders,
         queryKey: ['orders'],
         enabled: !!userId,
-        initialData: [],
+        initialData: [
+            {
+                id: '123',
+                number: 123,
+                local: 'Ficticio',
+                schedulingDate: '2025-06-06',
+                schedulingTime: '15:00 - 18:00',
+                price: 119.9,
+                status: 'PENDENTE',
+                contact: '123456789',
+                createdAt: '2025-06-06',
+                updatedAt: '2025-06-06',
+            },
+        ],
         refetchOnWindowFocus: false,
     });
 

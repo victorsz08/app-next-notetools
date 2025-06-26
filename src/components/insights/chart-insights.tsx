@@ -8,6 +8,7 @@ import moment from 'moment';
 import { Skeleton } from '../ui/skeleton';
 import { ChartDataType, DonutChart } from '../charts/donut-chart';
 import { ChartBar } from '../charts/bar-chart';
+import { toast } from 'sonner';
 
 const dateIn = moment().startOf('month').format('YYYY-MM-DD');
 const dateOut = moment().endOf('month').format('YYYY-MM-DD');
@@ -27,6 +28,11 @@ export function ChartInsights() {
         const response = await api.get(
             `insights/status/${userId}?dateIn=${dateIn}&dateOut=${dateOut}`
         );
+
+        if (response.status !== 200) {
+            toast.error('Erro ao carregar os seus relatórios!');
+        }
+
         return response.data;
     };
 

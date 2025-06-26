@@ -15,6 +15,7 @@ import { api } from '@/lib/axios';
 import moment from 'moment';
 import ReactQuill from 'react-quill';
 import { TextEditor } from '../rich-editor/editor';
+import { toast } from 'sonner';
 
 export function NotesApp() {
     const queryClient = useQueryClient();
@@ -23,6 +24,11 @@ export function NotesApp() {
 
     const getNotes = async () => {
         const response = await api.get(`notes/list/${userId}?page=1&limit=100`);
+
+        if (response.status !== 200) {
+            toast.error('Erro ao carregar os suas anotações!');
+        }
+
         const data: DataNote[] = response.data.notes;
 
         return data;
@@ -50,7 +56,11 @@ export function NotesApp() {
         mutationKey: ['create-note'],
         onSuccess: () => {
             setSelectedNote(notes[0]);
+            toast.success('Anotação criada com sucesso!');
             queryClient.invalidateQueries({ queryKey: ['notes'] });
+        },
+        onError: () => {
+            toast.error('Erro ao criar nova anotação!');
         },
     });
 
@@ -66,6 +76,10 @@ export function NotesApp() {
         mutationKey: ['update-note'],
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notes'] });
+            toast.success('Anotação criada com sucesso!');
+        },
+        onError: () => {
+            toast.error('Erro ao atualizar anotação!');
         },
     });
 
@@ -78,6 +92,10 @@ export function NotesApp() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notes'] });
             setSelectedNote(null);
+            toast.success('Anotação deletada com sucesso!');
+        },
+        onError: () => {
+            toast.error('Erro ao deletar anotação');
         },
     });
 

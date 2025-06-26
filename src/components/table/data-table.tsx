@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import {DataOrder} from "@/@types";
-import {Ellipsis} from "lucide-react";
+import { DataOrder } from '@/@types';
+import { Ellipsis } from 'lucide-react';
 import {
     Table,
     TableBody,
@@ -9,14 +9,14 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../ui/table";
-import {Checkbox} from "../ui/checkbox";
-import {StatusBadge} from "../status/status-badge";
-import {formatCurrency, formatDate} from "@/lib/utils";
-import MenuOrder from "../comp-366";
-import {useState} from "react";
+} from '../ui/table';
+import { Checkbox } from '../ui/checkbox';
+import { StatusBadge } from '../status/status-badge';
+import { formatCurrency, formatDate } from '@/lib/utils';
+import { useState } from 'react';
+import MenuOrder from '../menu-order';
 
-export function DataTable({data}: {data: DataOrder[]}) {
+export function DataTable({ data }: { data: DataOrder[] }) {
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
 
     function handleSelectedAllOrders() {

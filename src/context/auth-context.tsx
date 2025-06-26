@@ -4,6 +4,7 @@ import Loading from '@/app/loading';
 import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { createContext, use, useContext, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 type Session = {
     id: string;
@@ -28,8 +29,8 @@ export function AuthContextProvider({
 }) {
     const router = useRouter();
     const [session, setSession] = useState<Session>();
-    const [isLoading, setIsLoading] = useState(true); // Começa como true por padrão
-    const [error, setError] = useState(false); // Estado para erros não esperados
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         const getSession = async () => {
@@ -48,6 +49,7 @@ export function AuthContextProvider({
                 }
             } catch (err: any) {
                 if (err?.response?.status === 401) {
+                    toast.error('Erro ao carregar sua sessão!');
                     router.push('/auth/login');
                 } else {
                     setError(true);
@@ -58,7 +60,7 @@ export function AuthContextProvider({
         };
 
         getSession();
-    }, [router]); // Adicionado router como dependência, pois é usado no efeito.
+    }, [router]);
 
     if (isLoading) {
         return <Loading />;

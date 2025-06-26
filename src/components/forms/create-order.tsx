@@ -29,6 +29,7 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import { useAuth } from '@/context/auth-context';
+import { toast } from 'sonner';
 
 const createOrderSchema = z.object({
     number: z.coerce.number().min(1, 'número do contrato não pode ser vazio'),
@@ -63,7 +64,6 @@ export function CreateOrderForm() {
                 contact: data.contact,
             });
 
-            console.log(response);
             if (response.status === 400) {
                 return;
             }
@@ -74,14 +74,17 @@ export function CreateOrderForm() {
         onSuccess: () => {
             form.reset();
             setOpen(false);
+            toast.success('Pedido criado com sucesso');
         },
         onError: (error: any) => {
-            console.log(error.response.data.details[0].issue);
             error.response.data.details.forEach((err: any) => {
                 form.setError(err.issue, {
                     message: err.message,
                 });
             });
+            toast.error(
+                'Ocorreu um erro na criação do pedido, tente novamente mais tarde'
+            );
         },
     });
 
