@@ -96,7 +96,7 @@ export function UpdateOrder({ order }: UpdateOrderProps) {
 
     return (
         <Dialog modal open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-xs text-start px-2 py-1">
+            <DialogTrigger className="text-xs text-start px-2 py-3 hover:bg-muted">
                 Atualizar informações
             </DialogTrigger>
             <DialogContent>

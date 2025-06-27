@@ -26,12 +26,12 @@ export function AvatarProfile() {
                     </AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuItem className="flex items-center gap-1">
-                    <span className="text-sm font-semibold text-muted-foreground/80">
+            <DropdownMenuContent align="end" className="space-y-3">
+                <DropdownMenuItem className="flex flex-col items-start gap-0">
+                    <span className="text-xs font-semibold text-muted-foreground/80">
                         {session?.firstName} {session?.lastName}
                     </span>
-                    <span className="text-xs font-medium text-muted-foreground/60">
+                    <span className="text-xs font-light text-muted-foreground/60">
                         {session?.firstName} {session?.lastName}
                     </span>
                 </DropdownMenuItem>

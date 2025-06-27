@@ -11,10 +11,10 @@ export default function Dashboard() {
     return (
         <section className="p-4 space-y-5">
             <div className="flex flex-col gap-0">
-                <h2 className="text-xl font-bold text-muted-foreground">
+                <h2 className="text-2xl font-semibold text-muted-foreground/90">
                     Dashboard
                 </h2>
-                <small className="text-xs font-light text-muted-foregorund/70">
+                <small className="text-xs font-light text-muted-foreground/60">
                     Gerencie suas métricas.
                 </small>
             </div>

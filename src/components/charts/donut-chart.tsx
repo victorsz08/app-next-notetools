@@ -122,7 +122,7 @@ export function DonutChart({ data }: { data: ChartDataType[] }) {
                                 className="w-4 h-4 rounded-sm"
                                 style={{ backgroundColor: item.fill }}
                             ></span>
-                            <span className="font-semibold text-base">
+                            <span className="font-semibold text-base font-inter tracking-tight">
                                 {item.quantidade}
                             </span>
                         </div>

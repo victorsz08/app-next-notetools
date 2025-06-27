@@ -43,8 +43,10 @@ export function DeleteOrderDialog({ order }: DeleteOrderProps) {
 
     return (
         <Dialog modal open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-xs bg-red-100 text-red-700 px-2 w-full rounded-sm text-start py-1">
-                Excluir
+            <DialogTrigger asChild>
+                <div className="text-xs bg-red-100 text-red-700 px-2 w-full rounded-sm text-start py-2">
+                    Excluir
+                </div>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="space-y-0">

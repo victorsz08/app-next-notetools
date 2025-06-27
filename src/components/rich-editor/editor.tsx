@@ -6,7 +6,6 @@ import { useEffect, useMemo } from 'react';
 
 const fonts = ['poppins', 'barlow', 'inter'];
 
-// Forçando a tipagem correta
 const Quill = ReactQuill.Quill;
 const Font = Quill.import('formats/font') as {
     new (): any;
@@ -79,7 +78,7 @@ export function TextEditor({ value, onChange, onBlur }: TextEditorProps) {
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
-                className="h-[72vh] overflow-y-scroll border-muted"
+                className="h-[72vh] overflow-y-scroll border-muted font-poppins"
                 modules={modules}
             />
         </div>

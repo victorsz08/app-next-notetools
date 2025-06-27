@@ -9,10 +9,10 @@ export default function PedidosPage() {
     return (
         <main className="p-4 space-y-6">
             <section className="flex flex-col">
-                <h1 className="text-xl font-bold text-muted-foreground/80">
+                <h1 className="text-2xl font-semibold text-muted-foreground/90">
                     Meus Pedidos
                 </h1>
-                <small className="text-xs font-light text-mute-foreground/40">
+                <small className="text-xs font-light text-muted-foreground/60">
                     Gerencie todos os seus pedidos
                 </small>
             </section>

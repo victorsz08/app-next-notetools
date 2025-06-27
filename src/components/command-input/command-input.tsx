@@ -32,11 +32,13 @@ export function CidadeCombobox({
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <button className="w-full h-12 border rounded px-3 py-2 text-sm text-left">
-                    {value || 'Selecione uma cidade'}
-                </button>
+                {
+                    <button className="w-full border border-muted-foreground/30 h-12 border rounded px-3 py-2 text-sm text-left">
+                        {value}
+                    </button>
+                }
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
+            <PopoverContent className="w-full  p-0">
                 <Command>
                     <CommandInput
                         placeholder="Buscar cidade..."

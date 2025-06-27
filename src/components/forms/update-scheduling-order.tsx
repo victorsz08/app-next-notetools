@@ -95,7 +95,7 @@ export function UpdateSchedulingOrder({ order }: UpdateSchedulingOrderProps) {
 
     return (
         <Dialog modal open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-sm px-2 py-1">
+            <DialogTrigger className="text-xs px-2 py-3 hover:bg-muted">
                 Atualizar agendamento
             </DialogTrigger>
             <DialogContent>

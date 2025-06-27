@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // https://pktwx3-8000.csb.app/
-const BASE_URL = 'http://localhost:8000/';
+const BASE_URL = 'https://api-notetools-node.onrender.com/';
 
 export const api = axios.create({
     baseURL: BASE_URL,

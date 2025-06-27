@@ -25,7 +25,10 @@ export default function MenuOrder({ order }: { order: DataOrder }) {
                     <EllipsisIcon size={16} aria-hidden="true" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="flex flex-col justify-start items-start">
+            <DropdownMenuContent
+                align="start"
+                className="flex w-full flex-col justify-start items-start"
+            >
                 <DropdownMenuItem asChild>
                     <UpdateStatusOrder order={order} />
                 </DropdownMenuItem>

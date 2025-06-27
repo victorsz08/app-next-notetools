@@ -15,6 +15,7 @@ import { StatusBadge } from '../status/status-badge';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { useState } from 'react';
 import MenuOrder from '../menu-order';
+import { CopyBadge } from '../button/button-copy';
 
 export function DataTable({ data }: { data: DataOrder[] }) {
     const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
@@ -23,7 +24,7 @@ export function DataTable({ data }: { data: DataOrder[] }) {
         if (selectedOrders.length === data.length) {
             setSelectedOrders([]);
         } else {
-            setSelectedOrders(data.map((item) => item.id)); // Fix: Ensure all data items are mapped
+            setSelectedOrders(data.map((item) => item.id));
         }
     }
 
@@ -74,14 +75,20 @@ export function DataTable({ data }: { data: DataOrder[] }) {
                                     }
                                 />
                             </TableCell>
-                            <TableCell>{item.number}</TableCell>
+                            <TableCell>
+                                <CopyBadge text={item.number.toString()} />
+                                {item.number}
+                            </TableCell>
                             <TableCell>{item.local}</TableCell>
                             <TableCell>
                                 {formatDate(item.schedulingDate)}
                             </TableCell>
                             <TableCell>{item.schedulingTime}</TableCell>
                             <TableCell>{formatCurrency(item.price)}</TableCell>
-                            <TableCell>{item.contact}</TableCell>
+                            <TableCell>
+                                {item.contact}
+                                <CopyBadge text={item.contact} />
+                            </TableCell>
                             <TableCell>{formatDate(item.createdAt)}</TableCell>
                             <TableCell>
                                 <StatusBadge status={item.status} />

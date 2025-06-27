@@ -6,35 +6,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { api } from '@/lib/axios';
 import type { DataOrder, StatusType } from '@/@types';
-import Paginator from '../comp-458';
+import Paginator from '../paginator';
 import type { DateRange } from 'react-day-picker';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardHeader } from '../ui/card';
 import { Button } from '../ui/button';
-import { Label } from '../ui/label';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '../ui/select';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Calendar } from '../ui/calendar';
-import {
-    CalendarIcon,
-    Filter,
-    X,
-    ChevronDown,
-    ChevronUp,
-    Trash,
-    XCircle,
-    FilterX,
-} from 'lucide-react';
-import { ptBR } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { Filter, FilterX } from 'lucide-react';
 import moment from 'moment';
 import { Skeleton } from '../ui/skeleton';
-import { Badge } from '../ui/badge';
 import { OrderFilters } from '../filters/filter-order';
 import { CreateOrderForm } from '../forms/create-order';
 import { BadgeStatus } from '../badge/badge-filter';

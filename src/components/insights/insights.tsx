@@ -21,13 +21,13 @@ export function CardInsight({ title, children, icon }: CardInsightProps) {
     return (
         <Card className="w-full shadow-none">
             <CardHeader className="flex items-center justify-between">
-                <CardTitle className="text-xs font-light tracking-tight text-muted-foreground/60">
+                <CardTitle className="text-sm font-light tracking-tight text-muted-foreground/80">
                     {title}
                 </CardTitle>
                 {icon}
             </CardHeader>
             <CardContent>
-                <span className="text-2xl tracking-tighter font-bold text-muted-foreground">
+                <span className="text-2xl font-inter tracking-tighter font-bold text-muted-foreground">
                     {children}
                 </span>
             </CardContent>

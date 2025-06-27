@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +12,6 @@ import { useAuth } from '@/context/auth-context';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import moment from 'moment';
-import ReactQuill from 'react-quill';
 import { TextEditor } from '../rich-editor/editor';
 import { toast } from 'sonner';
 
@@ -76,7 +74,7 @@ export function NotesApp() {
         mutationKey: ['update-note'],
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['notes'] });
-            toast.success('Anotação criada com sucesso!');
+            toast.success('Anotação atualizada!');
         },
         onError: () => {
             toast.error('Erro ao atualizar anotação!');
