@@ -13,7 +13,8 @@ export default function PedidosPage() {
                     Meus Pedidos
                 </h1>
                 <small className="text-xs font-light text-muted-foreground/60">
-                    Gerencie todos os seus pedidos
+                    Gerencie suas informações pessoais e configurações de
+                    segurança
                 </small>
             </section>
             <OrderPage />
