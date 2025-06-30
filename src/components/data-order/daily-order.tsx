@@ -42,20 +42,7 @@ export function DailyOrder() {
         queryFn: getDailyOrders,
         queryKey: ['orders'],
         enabled: !!userId,
-        initialData: [
-            {
-                id: '123',
-                number: 123,
-                local: 'Ficticio',
-                schedulingDate: '2025-06-06',
-                schedulingTime: '15:00 - 18:00',
-                price: 119.9,
-                status: 'PENDENTE',
-                contact: '123456789',
-                createdAt: '2025-06-06',
-                updatedAt: '2025-06-06',
-            },
-        ],
+        initialData: [],
         refetchOnWindowFocus: false,
     });
 

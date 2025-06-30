@@ -10,8 +10,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import { api } from '@/lib/axios';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { cities } from '../forms/MOCK_CITIES';
 
 export function CidadeCombobox({
     value,
@@ -20,8 +21,21 @@ export function CidadeCombobox({
     value: string;
     onChange: (value: string) => void;
 }) {
+    const { data: cities } = useQuery<string[]>({
+        queryKey: ['cities'],
+        queryFn: async () => {
+            const response = await api.get('cities');
+            const data = response.data;
+
+            return data;
+        },
+        refetchOnWindowFocus: false,
+        initialData: [],
+    });
+
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
+
     const filteredCities =
         search.length >= 3
             ? cities.filter((city) =>
@@ -33,7 +47,7 @@ export function CidadeCombobox({
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 {
-                    <button className="w-full border border-muted-foreground/30 h-12 border rounded px-3 py-2 text-sm text-left">
+                    <button className="w-full border-muted-foreground/30 h-12 border rounded px-3 py-2 text-sm text-left">
                         {value}
                     </button>
                 }

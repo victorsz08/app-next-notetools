@@ -1,11 +1,11 @@
 import { AuthContextProvider } from "@/context/auth-context";
 import "./globals.css";
 import { Inter, Poppins, Barlow } from 'next/font/google';
-
+import { Providers } from './providers';
 
 const poppins = Poppins({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"] 
+    weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+    subsets: ['latin'],
 });
 
 const inter = Inter({
@@ -19,17 +19,19 @@ const barlow = Barlow({
 });
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-      <html lang="pt-BR">
-          <body
-              className={`${poppins.className} ${inter.variable} ${barlow.variable} antialiased bg-background`}
-          >
-              <AuthContextProvider>{children}</AuthContextProvider>
-          </body>
-      </html>
-  );
+    return (
+        <html lang="pt-BR">
+            <body
+                className={`${poppins.className} ${inter.variable} ${barlow.variable} antialiased bg-background`}
+            >
+                <Providers>
+                    <AuthContextProvider>{children}</AuthContextProvider>
+                </Providers>
+            </body>
+        </html>
+    );
 }

@@ -1,15 +1,18 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
 export default function middleware(request: NextRequest) {
-    // const token = request.cookies.get('nt.authtoken');
-    // const isPublicRoute = '/auth/login';
+    const token = request.cookies.get('nt.authtoken');
+    const isPublicRoute = '/auth/login';
+
     // if (!token && !isPublicRoute) {
     //     return NextResponse.redirect(new URL('/auth/login', request.url));
     // }
-    // // if (token && isPublicRoute) {
-    // //     return NextResponse.redirect(new URL('/', request.url));
-    // // }
-    // return NextResponse.next();
+
+    // if (token && isPublicRoute) {
+    //     return NextResponse.redirect(new URL('/', request.url));
+    // }
+
+    return NextResponse.next();
 }
 
 export const config = {

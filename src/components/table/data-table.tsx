@@ -12,7 +12,7 @@ import {
 } from '../ui/table';
 import { Checkbox } from '../ui/checkbox';
 import { StatusBadge } from '../status/status-badge';
-import { formatCurrency, formatDate } from '@/lib/utils';
+import { formatCurrency, formatDate, formatPhoneNumber } from '@/lib/utils';
 import { useState } from 'react';
 import MenuOrder from '../menu-order';
 import { CopyBadge } from '../button/button-copy';
@@ -86,7 +86,7 @@ export function DataTable({ data }: { data: DataOrder[] }) {
                             <TableCell>{item.schedulingTime}</TableCell>
                             <TableCell>{formatCurrency(item.price)}</TableCell>
                             <TableCell>
-                                {item.contact}
+                                {formatPhoneNumber(item.contact)}
                                 <CopyBadge text={item.contact} />
                             </TableCell>
                             <TableCell>{formatDate(item.createdAt)}</TableCell>

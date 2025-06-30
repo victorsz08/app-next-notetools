@@ -32,6 +32,7 @@ import {
 } from "../ui/dropdown-menu";
 import {useAuth} from "@/context/auth-context";
 import {NavLink} from "./nav-link";
+import Link from 'next/link';
 
 const items = [
     {
@@ -52,18 +53,18 @@ const items = [
 ];
 const links = [
     {
-        title: "Situação cadastral CPF",
-        href: "https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp",
+        title: 'Situação cadastral CPF',
+        href: 'https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp',
         icon: UserCheck,
     },
     {
-        title: "Situação Cadastral CNPJ",
-        href: "https://solucoes.receita.fazenda.gov.br/Servicos/cnpjreva/cnpjreva_Solicitacao.asp",
+        title: 'Situação Cadastral CNPJ',
+        href: 'https://solucoes.receita.fazenda.gov.br/Servicos/cnpjreva/cnpjreva_Solicitacao.asp',
         icon: CheckCircle,
     },
     {
-        title: "Negocia Fácil Claro",
-        href: "https://claro.negociafacil.com.br/",
+        title: 'Negocia Fácil Claro',
+        href: 'https://claro.negociafacil.com.br/',
         icon: Wallet,
     },
 ];
@@ -71,7 +72,7 @@ const links = [
 export default function AppSidebar({
     ...props
 }: React.ComponentProps<typeof Sidebar>) {
-    const {session} = useAuth();
+    const { session, logout } = useAuth();
 
     return (
         <Sidebar {...props} className="border-r">
@@ -120,7 +121,7 @@ export default function AppSidebar({
                                     </div>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                         <span className="truncate font-semibold">
-                                            {session?.firstName}{" "}
+                                            {session?.firstName}{' '}
                                             {session?.lastName}
                                         </span>
                                         <span className="truncate text-xs text-muted-foreground">
@@ -135,11 +136,19 @@ export default function AppSidebar({
                                 align="end"
                                 sideOffset={4}
                             >
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <User className="mr-2 h-4 w-4" />
-                                    Perfil
+                                <DropdownMenuItem>
+                                    <Link
+                                        href="/perfil"
+                                        className="cursor-pointer flex items-center gap-1 w-full"
+                                    >
+                                        <User className="mr-2 h-4 w-4" />
+                                        Perfil
+                                    </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer text-red-600">
+                                <DropdownMenuItem
+                                    onClick={() => logout()}
+                                    className="cursor-pointer text-red-600"
+                                >
                                     <LogOut className="mr-2 h-4 w-4" />
                                     Sair
                                 </DropdownMenuItem>

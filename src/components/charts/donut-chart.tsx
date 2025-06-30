@@ -48,7 +48,7 @@ export function DonutChart({ data }: { data: ChartDataType[] }) {
     }, []);
 
     return (
-        <Card className="flex flex-col">
+        <Card className="flex flex-col shadow-none">
             <CardHeader className="items-center flex flex-col justify-center gap-0 pb-0">
                 <CardTitle className="text-lg font-semibold text-muted-foreground/80">
                     Vendas

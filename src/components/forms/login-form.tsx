@@ -47,15 +47,12 @@ export function LoginForm() {
         } catch (error: any) {
             if (error.status === 400) {
                 form.setError('username', {
-                    type: 'server',
                     message: 'Usuário ou senha inválidos',
                 });
                 form.setError('password', {
-                    type: 'server',
                     message: 'Usuário ou senha inválidos',
                 });
             }
-            console.error(error);
         }
     }
 
