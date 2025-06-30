@@ -85,7 +85,7 @@ export function UpdateStatusOrder({ order }: { order: DataOrder }) {
 
     return (
         <Dialog modal open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="text-xs px-2 py-3 hover:bg-muted">
+            <DialogTrigger className="text-xs text-start min-w-full px-2 py-3 hover:bg-muted">
                 Atualizar status
             </DialogTrigger>
             <DialogContent>

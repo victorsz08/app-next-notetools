@@ -34,6 +34,7 @@ export function DeleteOrderDialog({ order }: DeleteOrderProps) {
         },
         mutationKey: ['delete-order'],
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['orders'] });
             setOpen(false);
         },
         onError: () => {
@@ -44,7 +45,7 @@ export function DeleteOrderDialog({ order }: DeleteOrderProps) {
     return (
         <Dialog modal open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div className="text-xs bg-red-100 text-red-700 px-2 w-full rounded-sm text-start py-2">
+                <div className="text-xs min-w-full bg-red-100 text-red-700 px-2 w-full rounded-sm text-start py-2">
                     Excluir
                 </div>
             </DialogTrigger>

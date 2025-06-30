@@ -22,7 +22,7 @@ import { api } from '@/lib/axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormField, FormMessage } from '../ui/form';
+import { Form, FormField, FormItem, FormMessage } from '../ui/form';
 import { toast } from 'sonner';
 import { AvatarSelector } from './avatar-selector';
 
@@ -117,7 +117,21 @@ export function Profile() {
         onSuccess: () => {
             toast.success('Dados atualizados com sucesso');
         },
-        onError: () => {
+        onError: (error: any) => {
+            if (error.response.status === 400) {
+                error.response.data.details.forEach((detail: any) => {
+                    form.setError(detail.issue, {
+                        message: detail.message,
+                    });
+                });
+                return;
+            }
+            if (error.response.status === 409) {
+                form.setError('username', {
+                    message: 'usuário já existe',
+                });
+                return;
+            }
             toast.error('Erro ao atualizar dados');
         },
     });
@@ -156,7 +170,7 @@ export function Profile() {
     const { mutate: updatePassword, isPending: updatePasswordIsPending } =
         useMutation({
             mutationFn: async (data: updatePasswordForm) => {
-                await api.put(`users/update-password/${userId}/`, {
+                await api.put(`users/update-password/${userId}`, {
                     currentPassword: data.currentPassword,
                     newPassword: data.newPassword,
                 });
@@ -168,20 +182,23 @@ export function Profile() {
                 toast.success('Senha atualizada com sucesso');
             },
             onError: (error: any) => {
-                error.response.data.details.forEach((error: any) => {
-                    form.setError(error.issue, {
-                        message: error.message,
+                if (error.response.status === 400) {
+                    formPassword.setError('currentPassword', {
+                        message: 'senha atual incorreta',
                     });
-                });
+                    return;
+                }
             },
         });
 
     return (
         <div className="w-full mt-4 space-y-6">
             <Card className="shadow-none w-full">
-                <CardHeader>
-                    <CardTitle>Informações Pessoais</CardTitle>
-                    <CardDescription>
+                <CardHeader className="mb-4">
+                    <CardTitle className="text-xl font-semibold text-muted-foreground/80">
+                        Informações Pessoais
+                    </CardTitle>
+                    <CardDescription className="text-xs font-normal text-muted-foreground/60">
                         Atualize seus dados pessoais e foto de perfil
                     </CardDescription>
                 </CardHeader>
@@ -210,42 +227,45 @@ export function Profile() {
                                     control={form.control}
                                     name="firstName"
                                     render={({ field }) => (
-                                        <div className="space-y-0">
+                                        <FormItem className="group relative">
                                             <Label
-                                                className="text-xs"
+                                                className="bg-white text-foreground absolute start-1 top-0 z-10 
+                                            block -translate-y-1/2 px-2 text-xs font-medium 
+                                            group-has-disabled:opacity-50"
                                                 htmlFor="firstName"
                                             >
                                                 Nome
                                             </Label>
                                             <Input
                                                 id="firstName"
-                                                value={userData.firstName}
-                                                onChange={field.onChange}
-                                                placeholder="Seu nome"
+                                                className="h-12"
+                                                {...field}
                                             />
-                                            <FormMessage className="text-[10px]" />
-                                        </div>
+                                            <FormMessage className="ml-1 text-[10px]" />
+                                        </FormItem>
                                     )}
                                 />
                                 <FormField
                                     control={form.control}
                                     name="lastName"
                                     render={({ field }) => (
-                                        <div className="space-y-0">
+                                        <FormItem className="group relative">
                                             <Label
-                                                className="text-xs"
+                                                className="bg-white text-foreground absolute start-1 top-0 z-10 
+                                                    block -translate-y-1/2 px-2 text-xs font-medium 
+                                                    group-has-disabled:opacity-50"
                                                 htmlFor="lastName"
                                             >
                                                 Sobrenome
                                             </Label>
                                             <Input
                                                 id="lastName"
-                                                value={userData.lastName}
-                                                onChange={field.onChange}
+                                                {...field}
+                                                className="h-12"
                                                 placeholder="Seu sobrenome"
                                             />
-                                            <FormMessage className="text-[10px]" />
-                                        </div>
+                                            <FormMessage className="ml-1 text-[10px]" />
+                                        </FormItem>
                                     )}
                                 />
                             </div>
@@ -254,34 +274,37 @@ export function Profile() {
                                 control={form.control}
                                 name="username"
                                 render={({ field }) => (
-                                    <div className="space-y-0">
+                                    <FormItem className="group relative">
                                         <Label
-                                            className="text-xs"
+                                            className="bg-white text-foreground absolute start-1 top-0 z-10 
+                                                block -translate-y-1/2 px-2 text-xs font-medium 
+                                                group-has-disabled:opacity-50"
                                             htmlFor="username"
                                         >
                                             Nome de Usuário
                                         </Label>
                                         <Input
                                             id="username"
-                                            value={userData.username}
-                                            onChange={field.onChange}
+                                            {...field}
+                                            className="h-12"
                                             placeholder="Seu nome de usuário"
                                         />
-                                        <FormMessage className="text-[10px]" />
-                                    </div>
+                                        <FormMessage className="ml-1 text-[10px]" />
+                                    </FormItem>
                                 )}
                             />
 
-                            <Button
-                                type="submit"
-                                className="flex items-center gap-2"
-                                disabled={updateUserIsPending}
-                            >
-                                <Save className="h-4 w-4" />
-                                {updateUserIsPending
-                                    ? 'Atualizando...'
-                                    : 'Atualizar'}
-                            </Button>
+                            <div className="w-full flex justify-end">
+                                <Button
+                                    type="submit"
+                                    disabled={updateUserIsPending}
+                                >
+                                    {updateUserIsPending
+                                        ? 'Atualizando...'
+                                        : 'Atualizar'}
+                                    <Save className="h-4 w-4" />
+                                </Button>
+                            </div>
                         </form>
                     </Form>
                 </CardContent>
@@ -289,162 +312,191 @@ export function Profile() {
 
             {/* Seção de Alteração de Senha */}
             <Card className="shadow-none">
-                <CardHeader>
-                    <CardTitle>Alterar Senha</CardTitle>
-                    <CardDescription>
+                <CardHeader className="mb-4">
+                    <CardTitle className="text-xl font-semibold text-muted-foreground/80">
+                        Alterar Senha
+                    </CardTitle>
+                    <CardDescription className="text-xs font-normal text-muted-foreground/60">
                         Mantenha sua conta segura com uma senha forte
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form
-                        className="space-y-4"
-                        onSubmit={formPassword.handleSubmit(
-                            updatePasswordSubmit
-                        )}
-                    >
-                        <FormField
-                            control={formPassword.control}
-                            name="currentPassword"
-                            render={({ field }) => (
-                                <div className="space-y-0">
-                                    <Label
-                                        className="text-xs"
-                                        htmlFor="currentPassword"
-                                    >
-                                        Senha Atual
-                                    </Label>
-                                    <div className="relative">
-                                        <Input
-                                            id="currentPassword"
-                                            type={
-                                                showPasswords.current
-                                                    ? 'text'
-                                                    : 'password'
-                                            }
-                                            placeholder="Digite sua senha atual"
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                                            onClick={() =>
-                                                togglePasswordVisibility(
-                                                    'current'
-                                                )
-                                            }
-                                        >
-                                            {showPasswords.current ? (
-                                                <EyeOff className="h-4 w-4" />
-                                            ) : (
-                                                <Eye className="h-4 w-4" />
-                                            )}
-                                        </Button>
-                                    </div>
-                                </div>
+                    <Form {...formPassword}>
+                        <form
+                            className="space-y-6"
+                            onSubmit={formPassword.handleSubmit(
+                                updatePasswordSubmit
                             )}
-                        />
-
-                        <FormField
-                            control={formPassword.control}
-                            name="newPassword"
-                            render={({ field }) => (
-                                <div className="space-y-0">
-                                    <Label
-                                        className="text-xs"
-                                        htmlFor="newPassword"
-                                    >
-                                        Nova Senha
-                                    </Label>
-                                    <div className="relative">
-                                        <Input
-                                            id="newPassword"
-                                            type={
-                                                showPasswords.new
-                                                    ? 'text'
-                                                    : 'password'
-                                            }
-                                            placeholder="Digite sua nova senha"
-                                        />
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                                            onClick={() =>
-                                                togglePasswordVisibility('new')
-                                            }
+                        >
+                            <FormField
+                                control={formPassword.control}
+                                name="currentPassword"
+                                render={({ field }) => (
+                                    <FormItem className="group relative">
+                                        <Label
+                                            className="bg-white text-foreground absolute start-1 top-0 z-10 
+                                            block -translate-y-1/2 px-2 text-xs font-medium 
+                                            group-has-disabled:opacity-50"
+                                            htmlFor="currentPassword"
                                         >
-                                            {showPasswords.new ? (
-                                                <EyeOff className="h-4 w-4" />
-                                            ) : (
-                                                <Eye className="h-4 w-4" />
-                                            )}
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
-                        />
+                                            Senha Atual
+                                        </Label>
+                                        <div className="relative">
+                                            <Input
+                                                id="currentPassword"
+                                                className="h-12"
+                                                type={
+                                                    showPasswords.current
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
+                                                placeholder="Digite sua senha atual"
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                                onClick={() =>
+                                                    togglePasswordVisibility(
+                                                        'current'
+                                                    )
+                                                }
+                                            >
+                                                {showPasswords.current ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </Button>
+                                        </div>
+                                        <FormMessage className="ml-1 text-[10px]" />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <div className="space-y-0">
-                            <Label
-                                className="text-xs"
-                                htmlFor="confirmPassword"
-                            >
-                                Confirmar Nova Senha
-                            </Label>
-                            <div className="relative">
-                                <Input
-                                    id="confirmPassword"
-                                    type={
-                                        showPasswords.confirm
-                                            ? 'text'
-                                            : 'password'
-                                    }
-                                    placeholder="Confirme sua nova senha"
-                                />
+                            <FormField
+                                control={formPassword.control}
+                                name="newPassword"
+                                render={({ field }) => (
+                                    <FormItem className="group relative">
+                                        <Label
+                                            className="bg-white text-foreground absolute start-1 top-0 z-10 
+                                            block -translate-y-1/2 px-2 text-xs font-medium 
+                                            group-has-disabled:opacity-50"
+                                            htmlFor="newPassword"
+                                        >
+                                            Nova Senha
+                                        </Label>
+                                        <div className="relative">
+                                            <Input
+                                                id="newPassword"
+                                                type={
+                                                    showPasswords.new
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
+                                                placeholder="Digite sua nova senha"
+                                                {...field}
+                                                className="h-12"
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                                onClick={() =>
+                                                    togglePasswordVisibility(
+                                                        'new'
+                                                    )
+                                                }
+                                            >
+                                                {showPasswords.new ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </Button>
+                                        </div>
+                                        <FormMessage className="ml-1 text-[10px]" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={formPassword.control}
+                                name="confirmNewPassword"
+                                render={({ field }) => (
+                                    <FormItem className="group relative">
+                                        <Label
+                                            htmlFor="confirmPassword"
+                                            className="bg-white text-foreground absolute start-1 top-0 z-10 
+                                            block -translate-y-1/2 px-2 text-xs font-medium group-has-disabled:opacity-50"
+                                        >
+                                            Confirmar Nova Senha
+                                        </Label>
+                                        <div className="relative">
+                                            <Input
+                                                id="confirmPassword"
+                                                className="h-12"
+                                                type={
+                                                    showPasswords.confirm
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
+                                                placeholder="Confirme sua nova senha"
+                                                {...field}
+                                            />
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                                onClick={() =>
+                                                    togglePasswordVisibility(
+                                                        'confirm'
+                                                    )
+                                                }
+                                            >
+                                                {showPasswords.confirm ? (
+                                                    <EyeOff className="h-4 w-4" />
+                                                ) : (
+                                                    <Eye className="h-4 w-4" />
+                                                )}
+                                            </Button>
+                                        </div>
+                                        <FormMessage className="ml-1 text-[10px]" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <div className="bg-muted p-4 rounded-lg">
+                                <h4 className="font-medium text-sm mb-2">
+                                    Requisitos da senha:
+                                </h4>
+                                <ul className="text-xs text-muted-foreground space-y-1">
+                                    <li>• Mínimo de 8 caracteres</li>
+                                    <li>• Pelo menos uma letra maiúscula</li>
+                                    <li>• Pelo menos uma letra minúscula</li>
+                                    <li>• Pelo menos um número</li>
+                                    <li>• Pelo menos um caractere especial</li>
+                                </ul>
+                            </div>
+                            <div className="w-full flex justify-end">
                                 <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                                    onClick={() =>
-                                        togglePasswordVisibility('confirm')
-                                    }
+                                    type="submit"
+                                    className="flex items-center gap-2"
+                                    disabled={updatePasswordIsPending}
                                 >
-                                    {showPasswords.confirm ? (
-                                        <EyeOff className="h-4 w-4" />
-                                    ) : (
-                                        <Eye className="h-4 w-4" />
-                                    )}
+                                    {updatePasswordIsPending
+                                        ? 'Atualizando...'
+                                        : 'Atualizar senha'}
+                                    <Save className="h-4 w-4" />
                                 </Button>
                             </div>
-                        </div>
-
-                        <div className="bg-muted p-4 rounded-lg">
-                            <h4 className="font-medium mb-2">
-                                Requisitos da senha:
-                            </h4>
-                            <ul className="text-sm text-muted-foreground space-y-1">
-                                <li>• Mínimo de 8 caracteres</li>
-                                <li>• Pelo menos uma letra maiúscula</li>
-                                <li>• Pelo menos uma letra minúscula</li>
-                                <li>• Pelo menos um número</li>
-                                <li>• Pelo menos um caractere especial</li>
-                            </ul>
-                        </div>
-
-                        <Button
-                            type="submit"
-                            className="flex items-center gap-2"
-                            disabled={updatePasswordIsPending}
-                        >
-                            <Save className="h-4 w-4" />
-                            {updatePasswordIsPending
-                                ? 'Atualizando...'
-                                : 'Atualizar senha'}
-                        </Button>
-                    </form>
+                        </form>
+                    </Form>
                 </CardContent>
             </Card>
         </div>

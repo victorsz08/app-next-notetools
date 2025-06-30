@@ -33,6 +33,7 @@ import {
 import {useAuth} from "@/context/auth-context";
 import {NavLink} from "./nav-link";
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const items = [
     {
@@ -68,6 +69,10 @@ const links = [
         icon: Wallet,
     },
 ];
+
+const getInitials = (firstName?: string, lastName?: string) => {
+    return `${firstName?.charAt(0)}${lastName?.charAt(0)}`.toUpperCase();
+};
 
 export default function AppSidebar({
     ...props
@@ -116,9 +121,18 @@ export default function AppSidebar({
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                                 >
-                                    <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                        <User className="size-4" />
-                                    </div>
+                                    <Avatar>
+                                        <AvatarImage
+                                            src={session?.avatarUrl}
+                                            alt="Avatar"
+                                        />
+                                        <AvatarFallback>
+                                            {getInitials(
+                                                session?.firstName,
+                                                session?.lastName
+                                            )}
+                                        </AvatarFallback>
+                                    </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
                                         <span className="truncate font-semibold">
                                             {session?.firstName}{' '}
