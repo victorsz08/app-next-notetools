@@ -11,7 +11,5 @@ export const api = axios.create({
     },
 });
 
-const cookie = parseCookies();
-const token = cookie['nt.authtoken'];
-
+const token = parseCookies(null, 'nt.authtoken');
 api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
