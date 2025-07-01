@@ -37,7 +37,11 @@ export function AuthContextProvider({
     } = useQuery({
         queryKey: ['session'],
         queryFn: async () => {
-            const { data } = await api.get('auth/session');
+            const { data, status } = await api.get('auth/session');
+            if (status === 401) {
+                return redirect('/auth/login');
+            }
+
             const session = await api.get<Session>(`users/${data.id}`);
             return session.data;
         },
