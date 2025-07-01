@@ -41,7 +41,10 @@ export function LoginForm() {
         try {
             const response = await api.post('auth/login', data);
             if (response.status === 200) {
-                localStorage.setItem('nt.authtoken', response.data.token);
+                window.localStorage.setItem(
+                    'nt.authtoken',
+                    response.data.token
+                );
                 router.push('/dashboard');
             }
         } catch (error: any) {

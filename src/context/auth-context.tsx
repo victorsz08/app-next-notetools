@@ -39,7 +39,7 @@ export function AuthContextProvider({
         queryFn: async () => {
             const { data, status } = await api.get('auth/session');
             if (status === 401) {
-                localStorage.removeItem('nt.authtoken');
+                window.localStorage.removeItem('nt.authtoken');
                 router.push('/auth/login');
             }
 
@@ -73,7 +73,7 @@ export const useAuth = () => {
     const queryClient = useQueryClient();
 
     const logout = async () => {
-        localStorage.removeItem('nt.authtoken');
+        window.localStorage.removeItem('nt.authtoken');
         queryClient.clear();
         router.push('/auth/login');
     };
