@@ -14,7 +14,6 @@ const Font = Quill.import('formats/font') as {
 Font.whitelist = fonts;
 Quill.register(Font, true);
 
-// Adiciona as classes de fonte manualmente
 const fontStyle = `
   .ql-font-poppins { font-family: 'Poppins', sans-serif; }
   .ql-font-barlow { font-family: 'Barlow', sans-serif; }
@@ -72,13 +71,13 @@ export function TextEditor({ value, onChange, onBlur }: TextEditorProps) {
     }, []);
 
     return (
-        <div className="h-[75vh] overflow-y-scroll">
+        <div className="h-full overflow-y-scroll">
             <ReactQuill
                 theme="snow"
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
-                className="h-[72vh] overflow-y-scroll border-muted font-poppins"
+                className="h-full ql-font-poppins overflow-y-scroll border-muted"
                 modules={modules}
             />
         </div>
