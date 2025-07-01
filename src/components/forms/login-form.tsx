@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { api } from '@/lib/axios';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { Lock, UserRound } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { setCookie } from 'nookies';
@@ -47,7 +47,7 @@ export function LoginForm() {
                     path: '/',
                 });
 
-                router.push('/dashboard');
+                redirect('/dashboard');
             }
         } catch (error: any) {
             if (error.status === 400) {
