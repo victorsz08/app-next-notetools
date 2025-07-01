@@ -16,11 +16,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { api } from '@/lib/axios';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Lock, UserRound } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { setCookie } from 'nookies';
-import { useRouter } from 'next/router';
 
 const loginSchema = z.object({
     username: z.string().min(1, 'username ou senha inválidos'),
