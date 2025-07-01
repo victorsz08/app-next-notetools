@@ -39,7 +39,7 @@ export function AuthContextProvider({
         queryFn: async () => {
             const { data, status } = await api.get('auth/session');
             if (status === 401) {
-                return redirect('/auth/login');
+                router.push('/auth/login');
             }
 
             const session = await api.get<Session>(`users/${data.id}`);
