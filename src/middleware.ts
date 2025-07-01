@@ -1,16 +1,22 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
+const publicRoutes = ['/auth/login'];
+
 export default function middleware(request: NextRequest) {
-    const token = request.cookies.get('nt.authtoken');
-    const isPublicRoute = '/auth/login';
+    const token = request.cookies.get('nt.authtoken')?.value;
+    const pathname = request.nextUrl.pathname;
 
-    // if (!token && !isPublicRoute) {
-    //     return NextResponse.redirect(new URL('/auth/login', request.url));
-    // }
+    const isPublicRoute = publicRoutes.includes(pathname);
 
-    // if (token && isPublicRoute) {
-    //     return NextResponse.redirect(new URL('/', request.url));
-    // }
+    // Se não estiver logado e tentando acessar rota privada
+    if (!token && !isPublicRoute) {
+        return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+
+    // Se estiver logado e tentar acessar login
+    if (token && isPublicRoute) {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
 
     return NextResponse.next();
 }

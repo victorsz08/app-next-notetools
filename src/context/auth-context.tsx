@@ -3,8 +3,9 @@
 import Loading from '@/app/loading';
 import { api } from '@/lib/axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { createContext, useContext } from 'react';
+import { se } from 'date-fns/locale';
+import { redirect, useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 type Session = {
     id: string;
@@ -29,20 +30,21 @@ export function AuthContextProvider({
     children: React.ReactNode;
 }) {
     const router = useRouter();
-
     const {
         data: session,
         isPending,
         error,
     } = useQuery({
-        queryFn: async () => {
-            const response = await api.get('auth/session');
-            const user = await api.get(`users/${response.data.id}`);
-
-            const session: Session = user.data;
-            return session;
-        },
         queryKey: ['session'],
+        queryFn: async () => {
+            const { data } = await api.get('auth/session');
+            const session = await api.get<Session>(`users/${data.id}`);
+            return session.data;
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutos
+        retry: 3,
+        retryDelay: 1000,
+        refetchOnWindowFocus: false,
     });
 
     if (isPending) {
@@ -62,13 +64,12 @@ export function AuthContextProvider({
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    const router = useRouter();
     const queryClient = useQueryClient();
 
     const logout = async () => {
         await api.post('auth/logout');
         queryClient.clear();
-        router.push('/auth/login');
+        return redirect('/auth/login');
     };
 
     return {

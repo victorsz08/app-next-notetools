@@ -40,9 +40,8 @@ export function LoginForm() {
     async function onSubmit(data: LoginFormData) {
         try {
             const response = await api.post('auth/login', data);
-            console.log(response);
             if (response.status === 200) {
-                return router.push('/dashboard');
+                router.push('/dashboard');
             }
         } catch (error: any) {
             if (error.status === 400) {
