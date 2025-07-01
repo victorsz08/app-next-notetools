@@ -4,8 +4,8 @@ import Loading from '@/app/loading';
 import { api } from '@/lib/axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { destroyCookie } from 'nookies';
-import { redirect, useRouter } from 'next/navigation';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect } from 'react';
 
 type Session = {
     id: string;
@@ -37,13 +37,13 @@ export function AuthContextProvider({
     } = useQuery({
         queryKey: ['session'],
         queryFn: async () => {
-            const { data, status } = await api.get('auth/session');
-            if (status === 401) {
-                destroyCookie(null, 'nt.authtoken');
-                router.push('/auth/login');
+            const authResponse = await api.get('auth/session');
+            if (!authResponse.data || !authResponse.data.id) {
+                throw new Error('ID de usuário não encontrado na sessão.');
             }
-
-            const session = await api.get<Session>(`users/${data.id}`);
+            const session = await api.get<Session>(
+                `users/${authResponse.data.id}`
+            );
             return session.data;
         },
         staleTime: 1000 * 60 * 5, // 5 minutos
@@ -56,9 +56,12 @@ export function AuthContextProvider({
         return <Loading />;
     }
 
-    if (error) {
-        router.push('/auth/login');
-    }
+    useEffect(() => {
+        if (error) {
+            destroyCookie(null, 'nt.authtoken');
+            router.push('/auth/login');
+        }
+    }, [error, router]);
 
     return (
         <AuthContext.Provider value={{ session }}>

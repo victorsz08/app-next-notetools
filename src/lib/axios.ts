@@ -3,7 +3,7 @@ import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 const BASE_URL = 'https://api-notetools-node-j3kp.vercel.app/';
 
-export const api = axios.create({
+const api = axios.create({
     baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
@@ -13,7 +13,7 @@ export const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
     (config) => {
-        const cookies = parseCookies(null); // Get all cookies
+        const cookies = parseCookies(null);
         const token = cookies['nt.authtoken'];
 
         if (token) {
@@ -56,3 +56,5 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export { api };
