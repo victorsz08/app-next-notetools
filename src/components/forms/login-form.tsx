@@ -19,6 +19,7 @@ import { api } from '@/lib/axios';
 import { useRouter } from 'next/navigation';
 import { Lock, UserRound } from 'lucide-react';
 import { Separator } from '../ui/separator';
+import { setCookie } from 'nookies';
 
 const loginSchema = z.object({
     username: z.string().min(1, 'username ou senha inválidos'),
@@ -41,10 +42,11 @@ export function LoginForm() {
         try {
             const response = await api.post('auth/login', data);
             if (response.status === 200) {
-                window.localStorage.setItem(
-                    'nt.authtoken',
-                    response.data.token
-                );
+                setCookie(null, 'nt.authtoken', response.data.token, {
+                    maxAge: 30 * 24 * 60 * 60,
+                    path: '/',
+                });
+
                 router.push('/dashboard');
             }
         } catch (error: any) {

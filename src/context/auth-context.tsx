@@ -3,7 +3,7 @@
 import Loading from '@/app/loading';
 import { api } from '@/lib/axios';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { se } from 'date-fns/locale';
+import { destroyCookie } from 'nookies';
 import { redirect, useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -39,7 +39,7 @@ export function AuthContextProvider({
         queryFn: async () => {
             const { data, status } = await api.get('auth/session');
             if (status === 401) {
-                window.localStorage.removeItem('nt.authtoken');
+                destroyCookie(null, 'nt.authtoken');
                 router.push('/auth/login');
             }
 
@@ -73,7 +73,7 @@ export const useAuth = () => {
     const queryClient = useQueryClient();
 
     const logout = async () => {
-        window.localStorage.removeItem('nt.authtoken');
+        destroyCookie(null, 'nt.authtoken');
         queryClient.clear();
         router.push('/auth/login');
     };
