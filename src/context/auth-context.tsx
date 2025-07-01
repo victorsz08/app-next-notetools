@@ -30,14 +30,13 @@ export function AuthContextProvider({
     children: React.ReactNode;
 }) {
     const router = useRouter();
-    const {
-        data: session,
-        isPending,
-        error,
-    } = useQuery({
+    const { data: session, isPending } = useQuery({
         queryKey: ['session'],
         queryFn: async () => {
             const authResponse = await api.get('auth/session');
+            if (authResponse.status === 401) {
+                router.push('/auth/login');
+            }
             const session = await api.get<Session>(
                 `users/${authResponse.data.id}`
             );
@@ -52,13 +51,6 @@ export function AuthContextProvider({
     if (isPending) {
         return <Loading />;
     }
-
-    useEffect(() => {
-        if (error) {
-            destroyCookie(null, 'nt.authtoken');
-            router.push('/auth/login');
-        }
-    }, [error, router]);
 
     return (
         <AuthContext.Provider value={{ session }}>
