@@ -47,7 +47,7 @@ export function LoginForm() {
                     path: '/',
                 });
 
-                redirect('/dashboard');
+                router.push('/dashboard');
             }
         } catch (error: any) {
             if (error.status === 400) {

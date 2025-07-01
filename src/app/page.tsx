@@ -1,5 +1,13 @@
-import { redirect } from "next/navigation";
+import { useAuth } from '@/context/auth-context';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  return redirect("/dashboard")
+    const { session } = useAuth();
+    const router = useRouter();
+
+    if (!session) {
+        router.push('/auth/login');
+    }
+
+    router.push('/dashboard');
 }
