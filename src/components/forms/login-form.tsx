@@ -20,6 +20,7 @@ import { redirect } from 'next/navigation';
 import { Lock, UserRound } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { setCookie } from 'nookies';
+import { useRouter } from 'next/router';
 
 const loginSchema = z.object({
     username: z.string().min(1, 'username ou senha inválidos'),
@@ -29,6 +30,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+    const router = useRouter();
     const form = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -40,14 +42,12 @@ export function LoginForm() {
     async function onSubmit(data: LoginFormData) {
         try {
             const response = await api.post('auth/login', data);
-            if (response.status === 200) {
-                setCookie(null, 'nt.authtoken', response.data.token, {
-                    maxAge: 30 * 24 * 60 * 60,
-                    path: '/',
-                });
+            setCookie(null, 'nt.authtoken', response.data.token, {
+                maxAge: 30 * 24 * 60 * 60,
+                path: '/',
+            });
 
-                redirect('/dashboard');
-            }
+            router.push('/dashboard');
         } catch (error: any) {
             if (error.status === 400) {
                 form.setError('username', {
