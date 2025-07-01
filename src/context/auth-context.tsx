@@ -64,12 +64,13 @@ export function AuthContextProvider({
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
+    const router = useRouter();
     const queryClient = useQueryClient();
 
     const logout = async () => {
         await api.post('auth/logout');
         queryClient.clear();
-        return redirect('/auth/login');
+        router.push('/auth/login');
     };
 
     return {

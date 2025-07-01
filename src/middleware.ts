@@ -3,8 +3,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 const publicRoutes = ['/auth/login'];
 
 export default function middleware(request: NextRequest) {
-    const token = request.cookies.get('nt.authtoken')?.value;
+    const token = request.cookies.get('nt.authtoken');
     const pathname = request.nextUrl.pathname;
+
+    console.log(token);
 
     const isPublicRoute = publicRoutes.includes(pathname);
 
@@ -22,5 +24,7 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    matcher: [
+        '/((?!_next|favicon.ico|images|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.svg$|.*\\.webp$|api).*)',
+    ],
 };

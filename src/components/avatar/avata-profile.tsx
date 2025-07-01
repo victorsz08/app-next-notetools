@@ -49,7 +49,7 @@ export function AvatarProfile() {
                     </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem
-                    onClick={() => logout()}
+                    onClick={logout}
                     className="text-red-700 cursor-pointer mt-1 bg-red-100 w-full flex items-center gap-1"
                 >
                     <LogOut className="w-3 h-3 text-red-700" />
