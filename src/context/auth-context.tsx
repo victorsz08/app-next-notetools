@@ -38,9 +38,6 @@ export function AuthContextProvider({
         queryKey: ['session'],
         queryFn: async () => {
             const authResponse = await api.get('auth/session');
-            if (!authResponse.data || !authResponse.data.id) {
-                throw new Error('ID de usuário não encontrado na sessão.');
-            }
             const session = await api.get<Session>(
                 `users/${authResponse.data.id}`
             );
