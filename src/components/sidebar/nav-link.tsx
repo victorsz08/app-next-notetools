@@ -9,10 +9,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '../ui/sidebar';
-import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-type NavMenuType = {
+type NavLinkType = {
     items: {
         title: string;
         href: string;
@@ -20,13 +19,11 @@ type NavMenuType = {
     }[];
 };
 
-export function NavMenu({ items }: NavMenuType) {
-    const pathname = usePathname();
-
+export function NavLink({ items }: NavLinkType) {
     return (
         <SidebarGroup>
             <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Navegação
+                Links Úteis
             </SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu className="gap-1">
@@ -35,11 +32,12 @@ export function NavMenu({ items }: NavMenuType) {
                             <SidebarMenuButton
                                 asChild
                                 tooltip={item.title}
-                                isActive={pathname === item.href}
                                 className="transition-colors text-xs duration-200 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                             >
                                 <Link
                                     href={item.href}
+                                    referrerPolicy="no-referrer"
+                                    target="_blank"
                                     className="flex items-center gap-3"
                                 >
                                     <item.icon className="h-4 w-4 shrink-0" />
