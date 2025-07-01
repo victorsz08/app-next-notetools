@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // https://pktwx3-8000.csb.app/
-const BASE_URL = 'https://api-notetools.onrender.com/';
+const BASE_URL = 'https://api-notetools-node-j3kp.vercel.app/';
 
 export const api = axios.create({
     baseURL: BASE_URL,
